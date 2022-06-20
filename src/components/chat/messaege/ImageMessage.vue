@@ -31,7 +31,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .image-message {
-  /deep/.el-image {
+  :deep(.el-image ){
     border-radius: 5px;
     cursor: pointer;
     background: #f1efef;

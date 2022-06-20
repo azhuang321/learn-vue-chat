@@ -676,7 +676,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-/deep/.el-scrollbar__wrap {
+:deep(.el-scrollbar__wrap) {
   overflow-x: hidden;
 }
 
@@ -697,7 +697,7 @@ export default {
       flex: 1 1;
       flex-shrink: 0;
 
-      /deep/ .el-input .el-input__inner {
+      :deep(.el-input .el-input__inner) {
         border-radius: 20px;
       }
     }

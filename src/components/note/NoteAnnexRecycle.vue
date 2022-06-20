@@ -198,7 +198,7 @@ export default {
   }
 }
 
-/deep/ .tab-header-row .cell {
+:deep( .tab-header-row .cell {
   font-size: 14px;
   font-weight: 400;
   color: rgb(172, 167, 167);

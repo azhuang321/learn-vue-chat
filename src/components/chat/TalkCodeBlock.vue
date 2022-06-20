@@ -312,29 +312,29 @@ export default {
   max-width: 100%;
 }
 
-/deep/ .el-input__inner {
+:deep(.el-input__inner) {
   border-radius: 0;
   width: 130px;
 }
 
-/deep/ pre {
+:deep( pre) {
   border-radius: 0;
 }
 
-/deep/ .prism-editor-wrapper pre::-webkit-scrollbar {
+:deep( .prism-editor-wrapper pre::-webkit-scrollbar) {
   background-color: #272822;
 }
 
-/deep/ .prism-editor-wrapper pre::-webkit-scrollbar-thumb {
+:deep( .prism-editor-wrapper pre::-webkit-scrollbar-thumb ){
   background-color: #41413f;
   cursor: pointer;
 }
 
-/deep/ .prism-editor-wrapper::-webkit-scrollbar {
+:deep( .prism-editor-wrapper::-webkit-scrollbar) {
   background-color: #272822;
 }
 
-/deep/ .prism-editor-wrapper::-webkit-scrollbar-thumb {
+:deep( .prism-editor-wrapper::-webkit-scrollbar-thumb ){
   background-color: rgb(114, 112, 112);
   cursor: pointer;
 }

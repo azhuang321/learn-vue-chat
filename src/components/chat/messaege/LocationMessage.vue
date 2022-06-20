@@ -72,10 +72,10 @@ export default {
   width: 100%;
   height: 100%;
 
-  /deep/.anchorBL {
+  :deep(.anchorBL) {
     display: none;
   }
-  /deep/.BMap_cpyCtrl {
+  :deep(.BMap_cpyCtrl) {
     display: none;
   }
 }

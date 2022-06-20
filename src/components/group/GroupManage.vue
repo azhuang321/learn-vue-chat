@@ -915,7 +915,7 @@ export default {
 
 /* 公告相关 end */
 
-/deep/.el-scrollbar__wrap {
+:deep(.el-scrollbar__wrap) {
   overflow-x: hidden;
 }
 </style>

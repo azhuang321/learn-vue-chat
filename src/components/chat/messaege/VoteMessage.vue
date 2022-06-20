@@ -233,7 +233,7 @@ export default {
       box-sizing: border-box;
 
       .option-radio {
-        /deep/.el-checkbox__inner {
+        :deep(.el-checkbox__inner {
           border-radius: 50%;
         }
       }

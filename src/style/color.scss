@@ -1,5 +1,8 @@
 /* 此文件要在element主样式文件之后引入 */
 /* 用了这种方法后，你不需要重写任何elementplus组件的颜色 */
+// 主题切换  https://element-plus.org/zh-CN/guide/theming.html#%E5%A6%82%E4%BD%95%E8%A6%86%E7%9B%96%E5%AE%83%EF%BC%9F
+//变量
+//https://github.com/element-plus/element-plus/blob/dev/packages/theme-chalk/src/common/var.scss
 
 :root {
   // 这里可以设置你自定义的颜色变量
@@ -11,6 +14,11 @@
 
 .el-link.el-link--primary:hover {
   color: var(--el-color-primary-light-2) !important;
+}
+
+.el-button.el-button--primary:hover {
+  //color: var(--el-color-primary-dark-1) !important;
+  color: #0d84ff !important;
 }
 
 .el-tag {
@@ -39,9 +47,11 @@
   & .bar {
     background-color: var(--el-color-primary) !important;
   }
+
   & .peg {
     box-shadow: 0 0 10px var(--el-color-primary), 0 0 5px var(--el-color-primary) !important;
   }
+
   & .spinner-icon {
     border-top-color: var(--el-color-primary);
     border-left-color: var(--el-color-primary);

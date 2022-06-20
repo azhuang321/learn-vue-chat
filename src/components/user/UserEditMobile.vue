@@ -255,7 +255,7 @@ export default {
   }
 }
 
-/deep/.el-form--label-top .el-form-item__label{
+:deep(.el-form--label-top .el-form-item__label{
   padding: 0;
   line-height: 30px;
 }

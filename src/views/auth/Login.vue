@@ -10,7 +10,7 @@
                         class="cuborder-radius"
                         maxlength="11"
                         autocomplete="off"
-                        @keyup.enter.native="onSubmit('form')"
+                        @keyup.enter="onSubmit('form')"
                     />
                 </el-form-item>
                 <el-form-item prop="password">
@@ -20,7 +20,7 @@
                         placeholder="密码"
                         class="cuborder-radius"
                         autocomplete="new-password"
-                        @keyup.enter.native="onSubmit('form')"
+                        @keyup.enter="onSubmit('form')"
                     />
                 </el-form-item>
                 <el-form-item>
@@ -28,6 +28,7 @@
                         type="primary"
                         class="submit-btn"
                         :loading="loginLoading"
+                        round
                         @click="onSubmit('form')"
                     >立即登录
                     </el-button>
@@ -51,13 +52,9 @@
                     </div>
                 </el-form-item>
 
-                <p style="margin-top: 50px">
-                    <el-divider>
-            <span style="color: rgb(181, 176, 176); font-weight: 200">
-              <i class="el-icon-mobile-phone"/> 预览账号
-            </span>
-                    </el-divider>
-                </p>
+                <el-divider>
+                    <span><i-ep-Iphone/>预览账号</span>
+                </el-divider>
                 <el-form-item class="preview-account">
                     <p>预览账号:18798272054 / 密码: admin123</p>
                     <p>预览账号:18798272055 / 密码: admin123</p>
@@ -163,33 +160,73 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$hl-bg-cl:white;
 
-.login-box{
+$hl-bg-cl: white;
+$lw-cl: #2d2c2c;
+
+
+.login-box {
     width: 3.9rem;
     min-height: 4.8rem;
     background-color: $hl-bg-cl;
     border-radius: .05rem;
+    margin: auto; // 特别重要，由于flex布局超出的内容是向上溢出，导致浏览器不会出现该有的滚动条
     padding: .1rem .2rem;
     box-shadow: 0 4px 14px 0 rgba(206, 207, 209, 0.5);
 
-    .header{
+    .header {
         width: 100%;
         height: .38rem;
         font-size: .22rem;
         margin: .25rem 0 .25rem 0;
+        color: #0d710d;
     }
 
     .main {
         width: 100%;
-        .links{
+
+        .links {
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
+        .el-form{
+            .el-input {
+                height: .4rem;
+                line-height: .4rem;
+            }
+
+            .submit-btn {
+                width: 100%;
+                height: .4rem;
+            }
+
+            .preview-account p {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                font-size: .12rem;
+                color: $lw-cl;
+                font-weight: 100;
+                margin: 0;
+            }
+            .el-divider{
+                margin-top: 50px;
+                span{
+                    display: flex;
+                    font-size: .14rem;
+                    font-weight: 200;
+                    color: $lw-cl;
+                    svg{
+                        margin-right: .05rem;
+                    }
+                }
+            }
+        }
+
+
     }
 }
-
-
 </style>

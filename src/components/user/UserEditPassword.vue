@@ -159,7 +159,7 @@ export default {
   max-width: 450px;
 }
 
-/deep/.el-form--label-top .el-form-item__label{
+:deep(.el-form--label-top .el-form-item__label{
   padding: 0;
   line-height: 30px;
 }
