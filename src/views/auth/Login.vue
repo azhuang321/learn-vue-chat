@@ -5,7 +5,7 @@
             <el-form ref="form" :model="form" :rules="rules">
                 <el-form-item prop="username">
                     <el-input
-                        v-model="form.username"
+                        v-model="username"
                         placeholder="手机号"
                         class="cuborder-radius"
                         maxlength="11"
@@ -15,7 +15,7 @@
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input
-                        v-model="form.password"
+                        v-model="password"
                         type="password"
                         placeholder="密码"
                         class="cuborder-radius"
@@ -67,30 +67,55 @@
 import { setToken } from '@/utils/auth';
 import { ServeLogin } from '@/api/auth';
 
+// 表单规则
+const formRules = () => {
+    return {
+        username: [{
+            required: true,
+            message: '登录账号不能为空!',
+            trigger: 'blur'
+        }],
+        password: [{
+            required: true,
+            message: '登录密码不能为空!',
+            trigger: 'blur'
+        }]
+    };
+};
+
+// const formData = () => {
+//     return {
+//         username: '',
+//         password: ''
+//     };
+// };
+
 export default {
+    setup () {
+        const loginLoading = ref(false);
+        const rules = formRules();
+        const form = reactive({
+            username: '',
+            password: ''
+        });
+
+
+        const { username, password } = toRefs(form);
+
+        setInterval(() => {
+            console.log(form.username);
+        }, 1000);
+
+        return {
+            loginLoading, rules, form, username, password
+        };
+    },
     data () {
         return {
-            loginLoading: false,
-            form: {
-                username: '',
-                password: ''
-            },
-            rules: {
-                username: [
-                    {
-                        required: true,
-                        message: '登录账号不能为空!',
-                        trigger: 'blur'
-                    }
-                ],
-                password: [
-                    {
-                        required: true,
-                        message: '登录密码不能为空!',
-                        trigger: 'blur'
-                    }
-                ]
-            }
+            // form: {
+            //     username: '',
+            //     password: ''
+            // }
         };
     },
     methods: {

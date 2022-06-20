@@ -184,7 +184,7 @@ export default {
       .lbox {
         width: 100%;
 
-        :deep(.el-input__prefix {
+        :deep(.el-input__prefix) {
           height: 36px;
           line-height: 36px;
         }
@@ -220,7 +220,7 @@ export default {
   }
 }
 
-:deep(.el-radio__input.is-checked + .el-radio__label {
+:deep(.el-radio__input.is-checked + .el-radio__label) {
   color: #606266;
 }
 </style>
