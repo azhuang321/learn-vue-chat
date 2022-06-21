@@ -36,109 +36,109 @@
 
 <script>
 function formatSeconds (value) {
-  let theTime = parseInt(value); // 秒
-  let theTime1 = 0; // 分
-  let theTime2 = 0; // 小时
-  if (theTime > 60) {
-    theTime1 = parseInt(theTime / 60);
-    theTime = parseInt(theTime % 60);
-    if (theTime1 > 60) {
-      theTime2 = parseInt(theTime1 / 60);
-      theTime1 = parseInt(theTime1 % 60);
+    let theTime = parseInt(value); // 秒
+    let theTime1 = 0; // 分
+    let theTime2 = 0; // 小时
+    if (theTime > 60) {
+        theTime1 = parseInt(theTime / 60);
+        theTime = parseInt(theTime % 60);
+        if (theTime1 > 60) {
+            theTime2 = parseInt(theTime1 / 60);
+            theTime1 = parseInt(theTime1 % 60);
+        }
     }
-  }
 
-  let result = '' + parseInt(theTime); // 秒
-  if (theTime < 10 > 0) {
-    result = '0' + parseInt(theTime); // 秒
-  } else {
-    result = '' + parseInt(theTime); // 秒
-  }
+    let result = '' + parseInt(theTime); // 秒
+    if (theTime < 10 > 0) {
+        result = '0' + parseInt(theTime); // 秒
+    } else {
+        result = '' + parseInt(theTime); // 秒
+    }
 
-  if (theTime1 < 10 > 0) {
-    result = '0' + parseInt(theTime1) + ':' + result; // 分，不足两位数，首位补充0，
-  } else {
-    result = '' + parseInt(theTime1) + ':' + result; // 分
-  }
-  if (theTime2 > 0) {
-    result = '' + parseInt(theTime2) + ':' + result; // 时
-  }
-  return result;
+    if (theTime1 < 10 > 0) {
+        result = '0' + parseInt(theTime1) + ':' + result; // 分，不足两位数，首位补充0，
+    } else {
+        result = '' + parseInt(theTime1) + ':' + result; // 分
+    }
+    if (theTime2 > 0) {
+        result = '' + parseInt(theTime2) + ':' + result; // 时
+    }
+    return result;
 }
 
 export default {
-  name: 'AudioMessage',
-  props: {
-    src: {
-      type: String,
-      default: ''
+    name: 'AudioMessage',
+    props: {
+        src: {
+            type: String,
+            default: ''
+        }
+    },
+    data () {
+        return {
+            loading: true,
+            isPlay: false,
+            duration: 0,
+            currentTime: 0,
+            progress: 0,
+            error: false
+        };
+    },
+    computed: {
+        getTotalDuration () {
+            return formatSeconds(this.duration);
+        },
+        getCurrDuration () {
+            return formatSeconds(this.currentTime);
+        }
+    },
+    methods: {
+        toPlay () {
+            if (this.loading || this.error) {
+                return;
+            }
+
+            const audio = this.$refs.audio;
+            if (this.isPlay) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+
+            this.isPlay = !this.isPlay;
+        },
+
+        // 当目前的播放位置已更改时
+        timeupdate () {
+            const audio = this.$refs.audio;
+            if (audio.duration == 0) {
+                this.progress = 0;
+            } else {
+                this.currentTime = audio.currentTime;
+                this.progress = (audio.currentTime / audio.duration) * 100;
+            }
+        },
+
+        // 当浏览器可以播放音频/视频时
+        canplay () {
+            this.duration = this.$refs.audio.duration;
+            this.loading = false;
+        },
+
+        // 当目前的播放列表已结束时
+        ended () {
+            this.isPlay = false;
+            this.progress = 0;
+        },
+
+        onError () {
+            this.error = true;
+            this.loading = false;
+        }
     }
-  },
-  data () {
-    return {
-      loading: true,
-      isPlay: false,
-      duration: 0,
-      currentTime: 0,
-      progress: 0,
-      error: false
-    };
-  },
-  computed: {
-    getTotalDuration () {
-      return formatSeconds(this.duration);
-    },
-    getCurrDuration () {
-      return formatSeconds(this.currentTime);
-    }
-  },
-  methods: {
-    toPlay () {
-      if (this.loading || this.error) {
-        return;
-      }
-
-      const audio = this.$refs.audio;
-      if (this.isPlay) {
-        audio.pause();
-      } else {
-        audio.play();
-      }
-
-      this.isPlay = !this.isPlay;
-    },
-
-    // 当目前的播放位置已更改时
-    timeupdate () {
-      const audio = this.$refs.audio;
-      if (audio.duration == 0) {
-        this.progress = 0;
-      } else {
-        this.currentTime = audio.currentTime;
-        this.progress = (audio.currentTime / audio.duration) * 100;
-      }
-    },
-
-    // 当浏览器可以播放音频/视频时
-    canplay () {
-      this.duration = this.$refs.audio.duration;
-      this.loading = false;
-    },
-
-    // 当目前的播放列表已结束时
-    ended () {
-      this.isPlay = false;
-      this.progress = 0;
-    },
-
-    onError () {
-      this.error = true;
-      this.loading = false;
-    }
-  }
 };
 </script>
-<style scoped lang="less">
+<style lang="scss" scoped>
 .audio-message {
   width: 200px;
   height: 60px;

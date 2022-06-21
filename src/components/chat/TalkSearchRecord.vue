@@ -483,8 +483,8 @@ export default {
   }
 
   .broadside {
-    @border: 1px solid #f9f9f9;
-    border-right: @border;
+    $border: 1px solid #f9f9f9;
+    border-right: $border;
     user-select: none;
     transition: 3s ease;
 
@@ -492,7 +492,7 @@ export default {
       display: flex;
       flex-direction: row;
       height: 100%;
-      border-bottom: @border;
+      border-bottom: $border;
       padding: 0;
 
       > div {
@@ -618,5 +618,5 @@ export default {
   }
 }
 
-@import '@/assets/css/talk/talk-records.less';
+//@import '@/assets/css/talk/talk-records.less';
 </style>

@@ -28,7 +28,10 @@ export default defineConfig({
         AutoImport({
             // Auto import functions from Vue, e.g. ref, reactive, toRef...
             // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
-            imports: ['vue'],
+            imports: ['vue', 'vue-router'],
+            exclude: [
+                /NIM_Web_NIM_v9.2.0.js/
+            ],
 
             // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
             // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)

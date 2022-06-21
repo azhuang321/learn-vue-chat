@@ -2,25 +2,25 @@
     <div class="login-box">
         <div class="header">快捷登录</div>
         <div class="main">
-            <el-form ref="form" :model="form" :rules="rules">
+            <el-form ref="ruleForms" :model="form" :rules="rules">
                 <el-form-item prop="username">
                     <el-input
-                        v-model="username"
+                        v-model.trim="form.username"
                         placeholder="手机号"
                         class="cuborder-radius"
                         maxlength="11"
                         autocomplete="off"
-                        @keyup.enter="onSubmit('form')"
+                        @keyup.enter="handleSubmit(ruleForms)"
                     />
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input
-                        v-model="password"
+                        v-model.trim="form.password"
                         type="password"
                         placeholder="密码"
                         class="cuborder-radius"
                         autocomplete="new-password"
-                        @keyup.enter="onSubmit('form')"
+                        @keyup.enter="handleSubmit(ruleForms)"
                     />
                 </el-form-item>
                 <el-form-item>
@@ -29,7 +29,7 @@
                         class="submit-btn"
                         :loading="loginLoading"
                         round
-                        @click="onSubmit('form')"
+                        @click="handleSubmit(ruleForms)"
                     >立即登录
                     </el-button>
                 </el-form-item>
@@ -63,13 +63,25 @@
         </div>
     </div>
 </template>
+
 <script>
 import { setToken } from '@/utils/auth';
 import { ServeLogin } from '@/api/auth';
 
-// 表单规则
-const formRules = () => {
-    return {
+import { initNim } from '@/utils/nim/init';
+import { isConnect } from '@/utils/nim/connection';
+
+let router = null;
+
+// 表单数据及规则
+const useFormDataEffect = () => {
+    const ruleForms = ref(null);
+
+    const form = reactive({
+        username: '',
+        password: ''
+    });
+    const rules = {
         username: [{
             required: true,
             message: '登录账号不能为空!',
@@ -81,107 +93,94 @@ const formRules = () => {
             trigger: 'blur'
         }]
     };
+    const { login, loginLoading } = useLoginEffect();
+    const handleSubmit = (ruleForms) => {
+        if (loginLoading.value) return false;
+        ruleForms.validate(valid => {
+            if (!valid) return false;
+            loginLoading.value = true;
+            login(form);
+            return true;
+        });
+    };
+
+    return {
+        form,
+        rules,
+        ruleForms,
+        handleSubmit
+    };
 };
 
-// const formData = () => {
-//     return {
-//         username: '',
-//         password: ''
-//     };
-// };
-
-export default {
-    setup () {
-        const loginLoading = ref(false);
-        const rules = formRules();
-        const form = reactive({
-            username: '',
-            password: ''
+const useLoginEffect = () => {
+    const loginLoading = ref(false);
+    const login = (form) => {
+        initNim();
+        watch(isConnect, (isConnect) => {
+            loginLoading.value = !isConnect;
+            router.push({ name: 'Index' });
         });
 
+        // ServeLogin({
+        //     mobile: form.username,
+        //     password: form.password,
+        //     platform: 'web'
+        // }).then(res => {
+        //     if (res.code == 200) {
+        //         const result = res.data;
+        //
+        //         // 保存授权信息到本地缓存
+        //         setToken(result.access_token, result.expires_in);
+        //
+        //         this.$store.commit('UPDATE_USER_INFO', result.userInfo);
+        //         this.$store.commit('UPDATE_LOGIN_STATUS');
+        //         this.$store.dispatch('LOAD_TALK_ITEMS');
+        //
+        //         // 登录成功后连接 WebSocket 服务器
+        //         this.$root.initialize();
+        //
+        //         this.toLink('/');
+        //
+        //         this.showNotice();
+        //     } else {
+        //         this.$notify.info({
+        //             title: '提示',
+        //             message: '登录密码不正确或账号不存在...'
+        //         });
+        //     }
+        // }).finally(() => {
+        //     this.loginLoading = false;
+        // });
+    };
 
-        const { username, password } = toRefs(form);
-
-        setInterval(() => {
-            console.log(form.username);
-        }, 1000);
-
-        return {
-            loginLoading, rules, form, username, password
-        };
-    },
-    data () {
-        return {
-            // form: {
-            //     username: '',
-            //     password: ''
-            // }
-        };
-    },
-    methods: {
-        onSubmit (formName) {
-            if (this.loginLoading) return false;
-
-            this.$refs[formName].validate(valid => {
-                if (!valid) return false;
-                this.loginLoading = true;
-                this.login();
-            });
-        },
-
-        login () {
-            ServeLogin({
-                mobile: this.form.username,
-                password: this.form.password,
-                platform: 'web'
-            })
-                .then(res => {
-                    if (res.code == 200) {
-                        const result = res.data;
-
-                        // 保存授权信息到本地缓存
-                        setToken(result.access_token, result.expires_in);
-
-                        this.$store.commit('UPDATE_USER_INFO', result.userInfo);
-                        this.$store.commit('UPDATE_LOGIN_STATUS');
-                        this.$store.dispatch('LOAD_TALK_ITEMS');
-
-                        // 登录成功后连接 WebSocket 服务器
-                        this.$root.initialize();
-
-                        this.toLink('/');
-
-                        this.showNotice();
-                    } else {
-                        this.$notify.info({
-                            title: '提示',
-                            message: '登录密码不正确或账号不存在...'
-                        });
-                    }
-                })
-                .finally(() => {
-                    this.loginLoading = false;
-                });
-        },
-
-        toLink (url) {
-            this.$router.push({
-                path: url
-            });
-        },
-
-        showNotice () {
-            setTimeout(() => {
-                this.$notify({
-                    title: '友情提示',
-                    message:
-                        '此站点仅供演示、学习所用，请勿进行非法操作、上传或发布违法资讯。',
-                    duration: 0
-                });
-            }, 3000);
-        }
-    }
+    return {
+        loginLoading,
+        login
+    };
 };
+
+
+export default {
+    name: 'Login'
+};
+</script>
+
+<script setup>
+
+router = useRouter();
+
+const { rules, form, ruleForms, handleSubmit } = useFormDataEffect();
+const { loginLoading } = useLoginEffect;
+
+setTimeout(() => {
+    ElNotification({
+        type: 'success',
+        title: 'Title',
+        message: h('i', { style: 'color: teal' }, 'This is a reminder')
+    });
+}, 1000);
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -204,7 +203,6 @@ $lw-cl: #2d2c2c;
         height: .38rem;
         font-size: .22rem;
         margin: .25rem 0 .25rem 0;
-        color: #0d710d;
     }
 
     .main {
@@ -217,7 +215,7 @@ $lw-cl: #2d2c2c;
             align-items: center;
         }
 
-        .el-form{
+        .el-form {
             .el-input {
                 height: .4rem;
                 line-height: .4rem;
@@ -237,14 +235,17 @@ $lw-cl: #2d2c2c;
                 font-weight: 100;
                 margin: 0;
             }
-            .el-divider{
+
+            .el-divider {
                 margin-top: 50px;
-                span{
+
+                span {
                     display: flex;
                     font-size: .14rem;
                     font-weight: 200;
                     color: $lw-cl;
-                    svg{
+
+                    svg {
                         margin-right: .05rem;
                     }
                 }

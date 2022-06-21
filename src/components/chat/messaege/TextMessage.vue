@@ -51,8 +51,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@bg-left-color: #f5f5f5;
-@bg-right-color: #1ebafc;
+
+$bg-left-color: #f5f5f5;
+$bg-right-color: #1ebafc;
 
 .text-message {
   position: relative;
@@ -77,21 +78,21 @@ export default {
 
   &.left {
     color: #3a3a3a;
-    background: @bg-left-color;
+    background: $bg-left-color;
 
     .arrow {
-      border-color: transparent @bg-left-color transparent transparent;
+      border-color: transparent $bg-left-color transparent transparent;
     }
   }
 
   &.right {
     color: #fff;
-    background: @bg-right-color;
+    background: $bg-right-color;
 
     .arrow {
       right: -10px;
       left: unset;
-      border-color: transparent transparent transparent @bg-right-color;
+      border-color: transparent transparent transparent $bg-right-color;
     }
   }
 
