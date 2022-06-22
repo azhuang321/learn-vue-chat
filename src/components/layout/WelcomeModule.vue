@@ -1,7 +1,7 @@
 <template>
   <div class="welcome-box">
     <div class="famous-box">
-      <img src="~@/assets/image/chat.png" width="300" />
+      <img src="@/assets/image/chat.png" width="300" />
       <p>
         不是井里没有水，而是你挖的不够深<br />
         不是成功来得慢，而是你努力的不够多<br />

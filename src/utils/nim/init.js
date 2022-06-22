@@ -1,8 +1,13 @@
 import config from '@/config/config';
 import { onConnect, onError, onWillReconnect, onDisConnect } from './connection';
+import { onMyInfo } from '@/utils/nim/user';
+
 await import(`../../nim_sdk/${config.sdk}.js`);
 
-
+/**
+ * 文档地址
+ * http://dev.yunxin.163.com/docs/interface/%E5%8D%B3%E6%97%B6%E9%80%9A%E8%AE%AFWeb%E7%AB%AF/NIMSDK-Web/NIM.html#getUser
+ */
 export const initNim = () => {
     window.NIM.getInstance({
         debug: false,
@@ -14,8 +19,9 @@ export const initNim = () => {
         syncSessionUnread: true,
         syncRobots: true,
         autoMarkRead: true,
-        onconnect: onConnect,
-        onerror: onError,
+        onconnect: onConnect, // 连接回调
+        onerror: onError, // 连接错误回调
+        onmyinfo: onMyInfo,
         onwillreconnect: onWillReconnect,
         ondisconnect: onDisConnect,
         onsyncdone: function onSyncDone () {

@@ -32,9 +32,15 @@
 </template>
 
 <script>
+import { useStore } from 'vuex';
+
 export default {
     name: 'AccountCard'
 };
+</script>
+<script setup>
+const store = useStore();
+// console.log(store.state.user);
 </script>
 <style lang="scss" scoped>
 .user-card {

@@ -4,21 +4,12 @@ export const onConnect = (event) => {
     isConnect.value = true;
 };
 
-
 export const onError = (event) => {
-    console.dir(event);
-    // if (loginInfo) {
-    //     // 连接上以后更新uid
-    //     commit('updateUserUID', loginInfo)
-    // }
+    console.dir('onError');
 };
 
 export const onWillReconnect = (event) => {
-    console.dir(event);
-    // if (loginInfo) {
-    //     // 连接上以后更新uid
-    //     commit('updateUserUID', loginInfo)
-    // }
+    console.dir('onWillReconnect');
 };
 
 export const onDisConnect = (error) => {

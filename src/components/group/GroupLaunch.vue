@@ -42,7 +42,7 @@
 
                       <div class="avatar">
                         <el-avatar :size="25" :src="item.avatar" shape="square">
-                          <img src="~@/assets/image/detault-avatar.jpg" />
+                          <img src="@/assets/image/detault-avatar.jpg" />
                         </el-avatar>
                       </div>
                       <div class="content"><span class="lum-text-ellipsis">{{ item.nickname }}</span></div>
@@ -93,7 +93,7 @@
                     >
                       <div class="avatar">
                         <el-avatar :size="25" :src="item.avatar" shape="square">
-                          <img src="~@/assets/image/detault-avatar.jpg" />
+                          <img src="@/assets/image/detault-avatar.jpg" />
                         </el-avatar>
                       </div>
                       <div class="content"><span class="lum-text-ellipsis">{{ item.nickname }}</span></div>

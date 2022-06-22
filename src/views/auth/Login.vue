@@ -70,8 +70,10 @@ import { ServeLogin } from '@/api/auth';
 
 import { initNim } from '@/utils/nim/init';
 import { isConnect } from '@/utils/nim/connection';
+import { useStore } from 'vuex';
 
 let router = null;
+let store = null;
 
 // 表单数据及规则
 const useFormDataEffect = () => {
@@ -117,40 +119,19 @@ const useLoginEffect = () => {
     const login = (form) => {
         initNim();
         watch(isConnect, (isConnect) => {
-            loginLoading.value = !isConnect;
-            router.push({ name: 'Index' });
-        });
+            if (isConnect === true) {
+                loginLoading.value = !isConnect;
+                store.commit('UPDATE_SOCKET_STATUS', true);
+                store.commit('UPDATE_LOGIN_STATUS', true);
 
-        // ServeLogin({
-        //     mobile: form.username,
-        //     password: form.password,
-        //     platform: 'web'
-        // }).then(res => {
-        //     if (res.code == 200) {
-        //         const result = res.data;
-        //
-        //         // 保存授权信息到本地缓存
-        //         setToken(result.access_token, result.expires_in);
-        //
-        //         this.$store.commit('UPDATE_USER_INFO', result.userInfo);
-        //         this.$store.commit('UPDATE_LOGIN_STATUS');
-        //         this.$store.dispatch('LOAD_TALK_ITEMS');
-        //
-        //         // 登录成功后连接 WebSocket 服务器
-        //         this.$root.initialize();
-        //
-        //         this.toLink('/');
-        //
-        //         this.showNotice();
-        //     } else {
-        //         this.$notify.info({
-        //             title: '提示',
-        //             message: '登录密码不正确或账号不存在...'
-        //         });
-        //     }
-        // }).finally(() => {
-        //     this.loginLoading = false;
-        // });
+                // 保存授权信息到本地缓存
+                // setToken(result.access_token, result.expires_in);
+                // this.$store.commit('UPDATE_USER_INFO', result.userInfo);
+                // this.$store.dispatch('LOAD_TALK_ITEMS');
+
+                router.push({ name: 'Index' });
+            }
+        });
     };
 
     return {
@@ -166,11 +147,12 @@ export default {
 </script>
 
 <script setup>
-
 router = useRouter();
+store = useStore();
 
 const { rules, form, ruleForms, handleSubmit } = useFormDataEffect();
 const { loginLoading } = useLoginEffect;
+
 
 setTimeout(() => {
     ElNotification({

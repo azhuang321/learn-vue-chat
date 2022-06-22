@@ -70,7 +70,7 @@
                 >
                   <div class="avatar">
                     <el-avatar :size="20" :src="item.avatar" shape="square">
-                      <img src="~@/assets/image/detault-avatar.jpg" />
+                      <img src="@/assets/image/detault-avatar.jpg" />
                     </el-avatar>
                   </div>
                   <div class="content" v-text="item.name"></div>
@@ -97,7 +97,7 @@
               class="history-record animated fadeIn"
             >
               <div class="empty-records">
-                <img src="~@/assets/image/chat-search-no-message.png" />
+                <img src="@/assets/image/chat-search-no-message.png" />
                 <p>暂无聊天记录</p>
               </div>
             </el-main>

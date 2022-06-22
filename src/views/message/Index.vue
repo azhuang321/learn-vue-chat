@@ -7,17 +7,17 @@
           <el-container class="full-height" direction="vertical">
             <!-- 搜索栏 -->
             <el-header height="60px" class="header">
-              <div class="from-search">
+<!--              <div class="from-search">
                 <el-input
                   v-model="input"
                   prefix-icon="el-icon-search"
                   placeholder="搜索聊天 / 好友 / 群组"
                   size="small"
                 />
-              </div>
+              </div>-->
 
               <!-- 工具栏 -->
-              <div class="tools" v-outside="closeSubMenu">
+<!--              <div class="tools" v-outside="closeSubMenu">
                 <el-button
                   circle
                   plain
@@ -36,11 +36,11 @@
                     </div>
                   </div>
                 </transition>
-              </div>
+              </div>-->
             </el-header>
 
             <!-- 置顶栏 -->
-            <header
+<!--            <header
               v-show="loadStatus == 3 && topItems.length > 0"
               class="subheader"
             >
@@ -80,10 +80,10 @@
                   {{ item.remark_name ? item.remark_name : item.name }}
                 </div>
               </div>
-            </header>
+            </header>-->
 
             <!-- 对话列表栏 -->
-            <el-scrollbar
+<!--            <el-scrollbar
               tag="section"
               ref="menusScrollbar"
               class="full-height"
@@ -102,9 +102,9 @@
                   <span class="title">消息记录 ({{ talkNum }})</span>
                 </p>
 
-                <!-- <p v-show="loadStatus == 4" style="text-align:center;">数据加载失败，请点击重试！</p> -->
+                &lt;!&ndash; <p v-show="loadStatus == 4" style="text-align:center;">数据加载失败，请点击重试！</p> &ndash;&gt;
 
-                <!-- 对话列表 -->
+                &lt;!&ndash; 对话列表 &ndash;&gt;
                 <template v-if="loadStatus == 3">
                   <div
                     v-for="item in talkItems"
@@ -199,12 +199,14 @@
                   </div>
                 </template>
               </el-main>
-            </el-scrollbar>
+            </el-scrollbar>-->
+
+
           </el-container>
         </el-aside>
 
         <!-- 聊天面板容器 -->
-        <el-main class="ov-hidden full-height no-padding">
+<!--        <el-main class="ov-hidden full-height no-padding">
           <WelcomeModule v-if="index_name == null" />
           <TalkPanel
             v-else
@@ -214,21 +216,21 @@
             @change-talk="changeTalk"
             @close-talk="closeTalk"
           />
-        </el-main>
+        </el-main>-->
 
         <!-- <el-aside width="350px" class="panel-aside"></el-aside> -->
       </el-container>
     </MainLayout>
 
     <!-- 创建群聊组件 -->
-    <GroupLaunch
+<!--    <GroupLaunch
       v-if="launchGroupShow"
       @close="launchGroupShow = false"
       @create-success="groupChatSuccess"
     />
 
-    <!-- 用户查询组件 -->
-    <UserSearch ref="searchUsers" />
+    &lt;!&ndash; 用户查询组件 &ndash;&gt;
+    <UserSearch ref="searchUsers" />-->
   </div>
 </template>
 
@@ -257,9 +259,9 @@ export default {
     name: 'MessagePage',
     components: {
         MainLayout,
-        GroupLaunch,
+        // GroupLaunch,
         TalkPanel,
-        UserSearch,
+        // UserSearch,
         WelcomeModule,
         UTime
     },
@@ -382,10 +384,10 @@ export default {
 
         // 监听自定义滚动条事件
         scrollEvent () {
-            const scrollbarEl = this.$refs.menusScrollbar.wrap;
-            scrollbarEl.onscroll = () => {
-                this.subHeaderShadow = scrollbarEl.scrollTop > 0;
-            };
+            // const scrollbarEl = this.$refs.menusScrollbar.wrap;
+            // scrollbarEl.onscroll = () => {
+            //     this.subHeaderShadow = scrollbarEl.scrollTop > 0;
+            // };
         },
 
         // 发起群聊成功后回调方法
