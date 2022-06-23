@@ -1,67 +1,67 @@
 <template>
-  <div class="panel">
-    <el-container class="full-height">
-      <el-header height="60px" class="header no-select border">
-        <p>我的好友({{ items.length }})</p>
-      </el-header>
-      <el-main class="panel-body no-padding lum-scrollbar">
-        <template v-if="status == 0">
-          <Loading />
-        </template>
-        <template v-else-if="status == 1 && items.length == 0">
-          <Empty text="暂无好友" />
-        </template>
+    <div class="panel">
+        <el-container class="full-height">
+            <el-header height="60px" class="header no-select border">
+                <p>我的好友({{ items.length }})</p>
+            </el-header>
+            <el-main class="panel-body no-padding lum-scrollbar">
+                <template v-if="status == 0">
+                    <Loading/>
+                </template>
+                <template v-else-if="status == 1 && items.length == 0">
+                    <Empty text="暂无好友"/>
+                </template>
 
-        <template v-if="status == 1">
-          <div
-            v-for="(item, index) in items"
-            :key="item.id"
-            class="data-item"
-            @click="touser(item, index)"
-          >
-            <el-avatar
-              class="avatar"
-              shape="square"
-              :size="35"
-              :src="item.avatar"
-            >
-              {{ item.nickname.substr(0, 1) }}
-            </el-avatar>
-            <div class="card">
-              <div class="title">
-                <span class="name">
-                  {{ item.friend_remark ? item.friend_remark : item.nickname }}
-                </span>
-                <div v-show="item.online == 1" class="larkc-tag agree">
-                  在线
-                </div>
-              </div>
-              <div class="content">
-                [个性签名] 「{{ item.motto ? item.motto : '未设置' }}」
-              </div>
-            </div>
+                <template v-if="status == 1">
+                    <div
+                        v-for="(item, index) in items"
+                        :key="item.account"
+                        class="data-item"
+                        @click="touser(item, index)"
+                    >
+                        <!--            <el-avatar
+                                      class="avatar"
+                                      shape="square"
+                                      :size="35"
+                                      :src="item.avatar"
+                                    >
+                                      {{ item.nickname.substr(0, 1) }}
+                                    </el-avatar>-->
+                        <div class="card">
+                            <div class="title">
+                                <span class="name">
+                                  {{ item.friend_remark ? item.friend_remark : item.nickname }}
+                                </span>
+                                <div v-show="item.online == 1" class="larkc-tag agree">
+                                    在线
+                                </div>
+                            </div>
+                            <div class="content">
+                                [个性签名] 「{{ item.motto ? item.motto : '未设置' }}」
+                            </div>
+                        </div>
 
-            <div class="apply-from" @click.prevent.stop>
-              <el-button
-                size="mini"
-                type="primary"
-                icon="el-icon-s-promotion"
-                @click="toTalk(1, item.id)"
-                >发送消息
-              </el-button>
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                @click="deleteFriend(item, index)"
-                >删除好友
-              </el-button>
-            </div>
-          </div>
-        </template>
-      </el-main>
-    </el-container>
-  </div>
+                        <div class="apply-from" @click.prevent.stop>
+                            <el-button
+                                size="mini"
+                                type="primary"
+                                icon="el-icon-s-promotion"
+                                @click="toTalk(1, item.id)"
+                            >发送消息
+                            </el-button>
+                            <el-button
+                                size="mini"
+                                type="danger"
+                                icon="el-icon-delete"
+                                @click="deleteFriend(item, index)"
+                            >删除好友
+                            </el-button>
+                        </div>
+                    </div>
+                </template>
+            </el-main>
+        </el-container>
+    </div>
 </template>
 
 <script>
@@ -71,6 +71,7 @@ import Loading from '@/components/global/Loading.vue';
 import { toTalk } from '@/utils/talk';
 
 import { useStore } from 'vuex';
+import { getFriends } from '@/utils/nim/user';
 
 export default {
     components: {
@@ -79,19 +80,13 @@ export default {
     },
     data () {
         return {
-            items: [],
-            status: 0
+            // items: [],
+            status: 1
         };
     },
-    created () {
-        this.loadFriends();
-        // loadFriends();
-    },
     methods: {
-    // 加载好友列表
+        // 加载好友列表
         loadFriends () {
-            const store = useStore();
-            store.dispatch('CONNECT_NIM');
 
             // console.log(window.NIM);
             // ServeGetContacts().then(res => {
@@ -154,17 +149,23 @@ export default {
 </script>
 
 <script setup>
+const store = useStore();
+const nim = store.getters.nimInstance;
+const friendList = reactive([]);
+
+const items = computed(() => friendList);
+
+console.dir(items);
+setTimeout(() => {
+    getFriends(nim, friendList);
+}, 2000);
 
 
-// const loadFriends = () => {
-//     store.dispatch('CONNECT_NIM');
-//
-//     //     if (res.code == 200) {
-//     //         this.status = 1;
-//     //         this.items = res.data;
-//     //     }
-//     // });
-// };
+setTimeout(() => {
+    console.dir(items.value);
+}, 4000);
+
+
 </script>
 <style lang="scss" scoped>
 @import '@/assets/css/page/contacts.scss';

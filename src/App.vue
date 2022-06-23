@@ -4,6 +4,9 @@
   </div>
 </template>
 <script>
+import { useStore } from 'vuex';
+import { CONNECT_NIM } from '@/store/modules/nim/constants';
+
 export default {
     name: 'App',
     data () {
@@ -11,6 +14,9 @@ export default {
             // 用于点击当前页的router时，刷新当前页
             showView: true
         };
+    },
+    mounted () {
+
     },
     methods: {
     // 刷新当前路由方法
@@ -20,4 +26,9 @@ export default {
         }
     }
 };
+</script>
+<script setup>
+// 发起连接
+const store = useStore();
+store.dispatch(CONNECT_NIM);
 </script>

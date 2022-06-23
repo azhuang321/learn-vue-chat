@@ -4,6 +4,7 @@ import { onConnect, onDisConnect, onError, onWillReconnect } from '@/utils/nim/c
 import { onMyInfo } from '@/utils/nim/user';
 await import(`../../../nim_sdk/${config.sdk}.js`);
 
+// 文档:http://dev.yunxin.163.com/docs/interface/%E5%8D%B3%E6%97%B6%E9%80%9A%E8%AE%AFWeb%E7%AB%AF/NIMSDK-Web/NIM.html#previewFile__anchor
 export const mutations = {
     [CONNECT_NIM] (state) {
         state.nimInstance = window.NIM.getInstance({
