@@ -8,12 +8,15 @@ import emoticon from './modules/emoticon';
 import dialogue from './modules/dialogue';
 import note from './modules/note';
 
+import nim from './modules/nim';
+
 import state from './state';
 import getters from './getters';
 import mutations from './mutations';
 
 const store = createStore({
     modules: {
+        nim,
         user,
         notify,
         talks,

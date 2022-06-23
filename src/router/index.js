@@ -1,13 +1,32 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { AuthRouter } from '@/router/auth';
+import Auth from '@/router/auth';
+import Contacts from '@/router/contacts';
 
 const routes = [
-    AuthRouter,
+    Auth,
+    Contacts,
     {
         path: '/',
         name: 'Index',
         component: () => import(
             /* webpackChunkName: "index" */
+            '@/views/message/Index.vue'
+        )
+    },
+    {
+        path: '/message',
+        name: 'Message',
+        component: () => import(
+            /* webpackChunkName: "message" */
+            '@/views/message/Index.vue'
+        )
+    },
+
+    {
+        path: '/settings',
+        name: 'Settings',
+        component: () => import(
+            /* webpackChunkName: "settings" */
             '@/views/message/Index.vue'
         )
     },

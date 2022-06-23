@@ -1,4 +1,4 @@
-export const AuthRouter = {
+export default {
     path: '/auth',
     name: 'auth',
     redirect: '/auth/login',

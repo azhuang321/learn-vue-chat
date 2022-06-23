@@ -17,7 +17,7 @@ export default {
         },
         src: {
             type: String,
-            default: require('@/assets/image/no-oncall.6b776fcf.png')
+            default: import('@/assets/image/no-oncall.6b776fcf.png')
         }
     },
     data () {

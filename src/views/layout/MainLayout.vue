@@ -23,11 +23,12 @@
                             <span v-else>连接中...</span>
                         </p>
                     </el-header>
+
                     <el-main class="sidebar-menu">
                         <el-tooltip
                             content="我的消息"
                             placement="right"
-                            :visible-arrow="false"
+                            :show-arrow="false"
                         >
                             <router-link to="/message">
                                 <div class="menu-items" :class="{ active: idx == 0 }">
@@ -40,7 +41,7 @@
                         <el-tooltip
                             content="我的联系人"
                             placement="right"
-                            :visible-arrow="false"
+                            :show-arrow="false"
                         >
                             <router-link to="/contacts">
                                 <div class="menu-items" :class="{ active: idx == 1 }">
@@ -52,7 +53,7 @@
                         <el-tooltip
                             content="我的设置"
                             placement="right"
-                            :visible-arrow="false"
+                            :show-arrow="false"
                         >
                             <router-link to="/settings">
                                 <div class="menu-items" :class="{ active: idx == 3 }">
@@ -146,6 +147,11 @@ const usercard = ref(null);
 
 </script>
 <style lang="scss" scoped>
+// todo 优化 css
+.el-main{
+    padding: 0;
+}
+
 .main-layout {
     position: fixed;
     width: 75%;

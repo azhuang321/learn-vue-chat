@@ -1,237 +1,234 @@
 <template>
-  <div>
-    <MainLayout :idx="0">
-      <el-container slot="container" class="full-height">
-        <!-- 左侧侧边栏 -->
-        <el-aside width="320px" class="aside-box">
-          <el-container class="full-height" direction="vertical">
-            <!-- 搜索栏 -->
-            <el-header height="60px" class="header">
-<!--              <div class="from-search">
-                <el-input
-                  v-model="input"
-                  prefix-icon="el-icon-search"
-                  placeholder="搜索聊天 / 好友 / 群组"
-                  size="small"
-                />
-              </div>-->
+    <div>
+        <MainLayout :idx="0" v-slot:container>
+            <el-container class="full-height">
+                <!-- 左侧侧边栏 -->
+                <el-aside width="320px" class="aside-box">
+                    <el-container class="full-height" direction="vertical">
+                        <!-- 搜索栏 -->
+                        <el-header height="60px" class="header">
+                            <div class="from-search">
+                                <el-input
+                                    v-model="input"
+                                    :prefix-icon="Search"
+                                    placeholder="搜索聊天 / 好友 / 群组"
+                                />
+                            </div>
 
-              <!-- 工具栏 -->
-<!--              <div class="tools" v-outside="closeSubMenu">
-                <el-button
-                  circle
-                  plain
-                  size="small"
-                  icon="el-icon-plus"
-                  @click="subMenu = !subMenu"
-                />
+                            <!-- 工具栏 -->
+                            <div class="tools" v-outside="closeSubMenu">
+                                <el-button
+                                    circle
+                                    plain
+                                    :icon="Plus"
+                                    @click="subMenu = !subMenu"
+                                />
+                                <transition name="el-zoom-in-top">
+                                    <div class="tools-menu" v-show="subMenu">
+                                        <div class="menu-item" @click="triggerSubMenu(1)">
+                                            创建群组
+                                        </div>
+                                        <div class="menu-item" @click="triggerSubMenu(2)">
+                                            添加好友
+                                        </div>
+                                    </div>
+                                </transition>
+                            </div>
+                        </el-header>
 
-                <transition name="el-zoom-in-top">
-                  <div class="tools-menu" v-show="subMenu">
-                    <div class="menu-item" @click="triggerSubMenu(1)">
-                      创建群组
-                    </div>
-                    <div class="menu-item" @click="triggerSubMenu(2)">
-                      添加好友
-                    </div>
-                  </div>
-                </transition>
-              </div>-->
-            </el-header>
+                        <!-- 置顶栏 -->
+                        <!--            <header
+                                      v-show="loadStatus == 3 && topItems.length > 0"
+                                      class="subheader"
+                                    >
+                                      <div
+                                        v-for="item in topItems"
+                                        :key="item.index_name"
+                                        class="top-item"
+                                        @click="clickTab(item.index_name)"
+                                        @contextmenu.prevent="topItemsMenu(item, $event)"
+                                      >
+                                        <el-tooltip
+                                          effect="dark"
+                                          placement="top-start"
+                                          :content="item.remark_name ? item.remark_name : item.name"
+                                        >
+                                          <div class="avatar">
+                                            <span v-show="!item.avatar">
+                                              {{
+                                                (item.remark_name
+                                                    ? item.remark_name
+                                                    : item.name
+                                                ).substr(0, 1)
+                                              }}
+                                            </span>
+                                            <img
+                                              v-show="item.avatar"
+                                              :src="item.avatar"
+                                              :onerror="$store.state.detaultAvatar"
+                                            />
+                                          </div>
+                                        </el-tooltip>
 
-            <!-- 置顶栏 -->
-<!--            <header
-              v-show="loadStatus == 3 && topItems.length > 0"
-              class="subheader"
-            >
-              <div
-                v-for="item in topItems"
-                :key="item.index_name"
-                class="top-item"
-                @click="clickTab(item.index_name)"
-                @contextmenu.prevent="topItemsMenu(item, $event)"
-              >
-                <el-tooltip
-                  effect="dark"
-                  placement="top-start"
-                  :content="item.remark_name ? item.remark_name : item.name"
-                >
-                  <div class="avatar">
-                    <span v-show="!item.avatar">
-                      {{
-                        (item.remark_name
-                            ? item.remark_name
-                            : item.name
-                        ).substr(0, 1)
-                      }}
-                    </span>
-                    <img
-                      v-show="item.avatar"
-                      :src="item.avatar"
-                      :onerror="$store.state.detaultAvatar"
-                    />
-                  </div>
-                </el-tooltip>
+                                        <div
+                                          class="name"
+                                          :class="{ active: index_name == item.index_name }"
+                                        >
+                                          {{ item.remark_name ? item.remark_name : item.name }}
+                                        </div>
+                                      </div>
+                                    </header>-->
 
-                <div
-                  class="name"
-                  :class="{ active: index_name == item.index_name }"
-                >
-                  {{ item.remark_name ? item.remark_name : item.name }}
-                </div>
-              </div>
-            </header>-->
+                        <!-- 对话列表栏 -->
+                        <!--            <el-scrollbar
+                                      tag="section"
+                                      ref="menusScrollbar"
+                                      class="full-height"
+                                      :native="false"
+                                    >
+                                      <el-main class="main">
+                                        <p v-show="loadStatus == 2" class="empty-data">
+                                          <i class="el-icon-loading" /> 数据加载中...
+                                        </p>
 
-            <!-- 对话列表栏 -->
-<!--            <el-scrollbar
-              tag="section"
-              ref="menusScrollbar"
-              class="full-height"
-              :native="false"
-            >
-              <el-main class="main">
-                <p v-show="loadStatus == 2" class="empty-data">
-                  <i class="el-icon-loading" /> 数据加载中...
-                </p>
+                                        <p v-show="loadStatus == 3 && talkNum == 0" class="empty-data">
+                                          暂无聊天消息
+                                        </p>
 
-                <p v-show="loadStatus == 3 && talkNum == 0" class="empty-data">
-                  暂无聊天消息
-                </p>
+                                        <p v-show="loadStatus == 3 && talkNum > 0" class="main-menu">
+                                          <span class="title">消息记录 ({{ talkNum }})</span>
+                                        </p>
 
-                <p v-show="loadStatus == 3 && talkNum > 0" class="main-menu">
-                  <span class="title">消息记录 ({{ talkNum }})</span>
-                </p>
+                                        &lt;!&ndash; <p v-show="loadStatus == 4" style="text-align:center;">数据加载失败，请点击重试！</p> &ndash;&gt;
 
-                &lt;!&ndash; <p v-show="loadStatus == 4" style="text-align:center;">数据加载失败，请点击重试！</p> &ndash;&gt;
+                                        &lt;!&ndash; 对话列表 &ndash;&gt;
+                                        <template v-if="loadStatus == 3">
+                                          <div
+                                            v-for="item in talkItems"
+                                            :key="item.index_name"
+                                            class="talk-item pointer"
+                                            :class="{ active: index_name == item.index_name }"
+                                            @click="clickTab(item.index_name)"
+                                            @contextmenu.prevent="talkItemsMenu(item, $event)"
+                                          >
+                                            <div class="avatar-box">
+                                              <span v-show="!item.avatar">
+                                                {{
+                                                  (item.remark_name
+                                                      ? item.remark_name
+                                                      : item.name
+                                                  ).substr(0, 1)
+                                                }}
+                                              </span>
+                                              <img
+                                                v-show="item.avatar"
+                                                :src="item.avatar"
+                                                :onerror="$store.state.detaultAvatar"
+                                              />
+                                              <div
+                                                v-show="item.is_top == 0"
+                                                class="top-mask"
+                                                @click.stop="topChatItem(item)"
+                                              >
+                                                <i class="el-icon-top" />
+                                              </div>
+                                            </div>
+                                            <div class="card-box">
+                                              <div class="title">
+                                                <div class="card-name">
+                                                  <p class="nickname">
+                                                    {{
+                                                      item.remark_name ? item.remark_name : item.name
+                                                    }}
+                                                  </p>
+                                                  <div v-show="item.unread_num" class="larkc-tag">
+                                                    {{ item.unread_num }}条未读
+                                                  </div>
+                                                  <div v-show="item.is_top" class="larkc-tag top">
+                                                    TOP
+                                                  </div>
 
-                &lt;!&ndash; 对话列表 &ndash;&gt;
-                <template v-if="loadStatus == 3">
-                  <div
-                    v-for="item in talkItems"
-                    :key="item.index_name"
-                    class="talk-item pointer"
-                    :class="{ active: index_name == item.index_name }"
-                    @click="clickTab(item.index_name)"
-                    @contextmenu.prevent="talkItemsMenu(item, $event)"
-                  >
-                    <div class="avatar-box">
-                      <span v-show="!item.avatar">
-                        {{
-                          (item.remark_name
-                              ? item.remark_name
-                              : item.name
-                          ).substr(0, 1)
-                        }}
-                      </span>
-                      <img
-                        v-show="item.avatar"
-                        :src="item.avatar"
-                        :onerror="$store.state.detaultAvatar"
-                      />
-                      <div
-                        v-show="item.is_top == 0"
-                        class="top-mask"
-                        @click.stop="topChatItem(item)"
-                      >
-                        <i class="el-icon-top" />
-                      </div>
-                    </div>
-                    <div class="card-box">
-                      <div class="title">
-                        <div class="card-name">
-                          <p class="nickname">
-                            {{
-                              item.remark_name ? item.remark_name : item.name
-                            }}
-                          </p>
-                          <div v-show="item.unread_num" class="larkc-tag">
-                            {{ item.unread_num }}条未读
-                          </div>
-                          <div v-show="item.is_top" class="larkc-tag top">
-                            TOP
-                          </div>
+                                                  <div v-show="item.is_robot" class="larkc-tag top">
+                                                    BOT
+                                                  </div>
 
-                          <div v-show="item.is_robot" class="larkc-tag top">
-                            BOT
-                          </div>
+                                                  <div
+                                                    v-show="item.talk_type == 2"
+                                                    class="larkc-tag group"
+                                                  >
+                                                    群组
+                                                  </div>
+                                                  <div
+                                                    v-show="item.is_disturb"
+                                                    class="larkc-tag disturb"
+                                                  >
+                                                    <i class="iconfont icon-xiaoximiandarao" />
+                                                  </div>
+                                                </div>
+                                                <div class="card-time">
+                                                  <u-time :value="item.updated_at" />
+                                                </div>
+                                              </div>
+                                              <div class="content">
+                                                <template
+                                                  v-if="
+                                                    index_name != item.index_name && item.draft_text
+                                                  "
+                                                >
+                                                  <span class="draft-color">[草稿]</span>
+                                                  <span>{{ item.draft_text }}</span>
+                                                </template>
+                                                <template v-else>
+                                                  <template v-if="item.is_robot == 0">
+                                                    <span
+                                                      v-if="item.talk_type == 1"
+                                                      :class="{ 'online-color': item.is_online == 1 }"
+                                                    >
+                                                      [{{ item.is_online == 1 ? '在线' : '离线' }}]
+                                                    </span>
+                                                    <span v-else>[群消息]</span>
+                                                  </template>
 
-                          <div
-                            v-show="item.talk_type == 2"
-                            class="larkc-tag group"
-                          >
-                            群组
-                          </div>
-                          <div
-                            v-show="item.is_disturb"
-                            class="larkc-tag disturb"
-                          >
-                            <i class="iconfont icon-xiaoximiandarao" />
-                          </div>
-                        </div>
-                        <div class="card-time">
-                          <u-time :value="item.updated_at" />
-                        </div>
-                      </div>
-                      <div class="content">
-                        <template
-                          v-if="
-                            index_name != item.index_name && item.draft_text
-                          "
-                        >
-                          <span class="draft-color">[草稿]</span>
-                          <span>{{ item.draft_text }}</span>
-                        </template>
-                        <template v-else>
-                          <template v-if="item.is_robot == 0">
-                            <span
-                              v-if="item.talk_type == 1"
-                              :class="{ 'online-color': item.is_online == 1 }"
-                            >
-                              [{{ item.is_online == 1 ? '在线' : '离线' }}]
-                            </span>
-                            <span v-else>[群消息]</span>
-                          </template>
-
-                          <span>{{ item.msg_text }}</span>
-                        </template>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-              </el-main>
-            </el-scrollbar>-->
+                                                  <span>{{ item.msg_text }}</span>
+                                                </template>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </template>
+                                      </el-main>
+                                    </el-scrollbar>-->
 
 
-          </el-container>
-        </el-aside>
+                    </el-container>
+                </el-aside>
 
-        <!-- 聊天面板容器 -->
-<!--        <el-main class="ov-hidden full-height no-padding">
-          <WelcomeModule v-if="index_name == null" />
-          <TalkPanel
-            v-else
-            class="full-height"
-            :params="params"
-            :is-online="isFriendOnline"
-            @change-talk="changeTalk"
-            @close-talk="closeTalk"
-          />
-        </el-main>-->
+                <!-- 聊天面板容器 -->
+                <!--        <el-main class="ov-hidden full-height no-padding">
+                          <WelcomeModule v-if="index_name == null" />
+                          <TalkPanel
+                            v-else
+                            class="full-height"
+                            :params="params"
+                            :is-online="isFriendOnline"
+                            @change-talk="changeTalk"
+                            @close-talk="closeTalk"
+                          />
+                        </el-main>-->
 
-        <!-- <el-aside width="350px" class="panel-aside"></el-aside> -->
-      </el-container>
-    </MainLayout>
+                <!-- <el-aside width="350px" class="panel-aside"></el-aside> -->
+            </el-container>
+        </MainLayout>
 
-    <!-- 创建群聊组件 -->
-<!--    <GroupLaunch
-      v-if="launchGroupShow"
-      @close="launchGroupShow = false"
-      @create-success="groupChatSuccess"
-    />
+        <!-- 创建群聊组件 -->
+        <!--    <GroupLaunch
+              v-if="launchGroupShow"
+              @close="launchGroupShow = false"
+              @create-success="groupChatSuccess"
+            />
 
-    &lt;!&ndash; 用户查询组件 &ndash;&gt;
-    <UserSearch ref="searchUsers" />-->
-  </div>
+            &lt;!&ndash; 用户查询组件 &ndash;&gt;
+            <UserSearch ref="searchUsers" />-->
+    </div>
 </template>
 
 <script>
@@ -253,6 +250,10 @@ import { ServeSecedeGroup } from '@/api/group';
 import { beautifyTime } from '@/utils/functions';
 import { findTalkIndex, getCacheIndexName } from '@/utils/talk';
 
+import {
+    Plus, Search
+} from '@element-plus/icons-vue';
+
 const title = document.title;
 
 export default {
@@ -267,6 +268,8 @@ export default {
     },
     data () {
         return {
+            Plus,
+            Search,
             subHeaderShadow: false,
             launchGroupShow: false,
 
@@ -319,7 +322,7 @@ export default {
             if (value > 0) {
                 this.interval = setInterval(() => {
                     document.title =
-            document.title == title ? `【新消息】${title}` : title;
+                        document.title == title ? `【新消息】${title}` : title;
                 }, 2000);
             } else {
                 document.title = title;
@@ -348,7 +351,7 @@ export default {
         this.clearTalk();
     },
     methods: {
-    // 美化时间格式
+        // 美化时间格式
         beautifyTime,
 
         // header 功能栏隐藏事件
@@ -483,9 +486,9 @@ export default {
                     {
                         label: item.is_disturb == 0 ? '消息免打扰' : '开启消息提示',
                         icon:
-              item.is_disturb == 0
-                  ? 'el-icon-close-notification'
-                  : 'el-icon-bell',
+                            item.is_disturb == 0
+                                ? 'el-icon-close-notification'
+                                : 'el-icon-bell',
                         disabled: item.is_robot == 1,
                         onClick: () => {
                             this.setNotDisturb(item);
@@ -672,333 +675,336 @@ export default {
                         }
                     });
                 })
-                .catch(() => {});
+                .catch(() => {
+                });
         }
     }
 };
 </script>
 <style lang="scss" scoped>
 :deep(.el-scrollbar__wrap) {
-  overflow-x: hidden;
+    overflow-x: hidden;
 }
 
+
 .aside-box {
-  position: relative;
-  border-right: 1px solid rgb(245, 245, 245);
-  overflow: hidden;
-  padding: 0;
-  transition: width 0.3s;
-
-  .header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 15px;
-
-    .from-search {
-      flex: 1 1;
-      flex-shrink: 0;
-
-      :deep(.el-input .el-input__inner) {
-        border-radius: 20px;
-      }
-    }
-
-    .tools {
-      flex-basis: 32px;
-      flex-shrink: 0;
-      height: 32px;
-      margin-left: 15px;
-      cursor: pointer;
-      text-align: center;
-      position: relative;
-      user-select: none;
-
-      .tools-menu {
-        position: absolute;
-        right: 0;
-        top: 38px;
-        width: 100px;
-        min-height: 80px;
-        box-sizing: border-box;
-        background-color: rgba(31, 35, 41, 0.9);
-        border-radius: 5px;
-        z-index: 1;
-        padding: 3px 0;
-
-        .menu-item {
-          height: 40px;
-          line-height: 40px;
-          color: white;
-          font-size: 14px;
-
-          &:hover {
-            background-color: rgba(70, 72, 73, 0.9);
-          }
-        }
-      }
-    }
-  }
-
-  .subheader {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 5px 8px;
+    position: relative;
+    border-right: 1px solid rgb(245, 245, 245);
     overflow: hidden;
-    flex-shrink: 0;
-    justify-content: flex-start;
-    background: aliceblue;
+    padding: 0;
+    transition: width 0.3s;
 
-    .top-item {
-      flex-basis: 41px;
-      flex-shrink: 0;
-      height: 50px;
-      margin: 3px 0 3px 2px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-
-      .avatar {
-        flex-basis: 32px;
-        width: 32px;
-        height: 32px;
-        background-color: #508afe;
-        border-radius: 50%;
+    .header {
         display: flex;
-        justify-content: center;
+        flex-direction: row;
         align-items: center;
-        font-size: 10px;
-        color: white;
+        padding: 0 15px;
+
+        .from-search {
+            flex: 1 1;
+            flex-shrink: 0;
+
+            :deep(.el-input .el-input__wrapper){
+                border-radius: 20px;
+            }
+        }
+
+        .tools {
+            flex-basis: 32px;
+            flex-shrink: 0;
+            height: 32px;
+            margin-left: 15px;
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+            user-select: none;
+
+            .tools-menu {
+                position: absolute;
+                right: 0;
+                top: 38px;
+                width: 100px;
+                min-height: 80px;
+                box-sizing: border-box;
+                background-color: rgba(31, 35, 41, 0.9);
+                border-radius: 5px;
+                z-index: 1;
+                padding: 3px 0;
+
+                .menu-item {
+                    height: 40px;
+                    line-height: 40px;
+                    color: white;
+                    font-size: 14px;
+
+                    &:hover {
+                        background-color: rgba(70, 72, 73, 0.9);
+                    }
+                }
+            }
+        }
+    }
+
+    .subheader {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 5px 8px;
+        overflow: hidden;
         flex-shrink: 0;
-        overflow: hidden;
-        user-select: none;
+        justify-content: flex-start;
+        background: aliceblue;
 
-        img {
-          width: 100%;
-          height: 100%;
-          background-color: white;
+        .top-item {
+            flex-basis: 41px;
+            flex-shrink: 0;
+            height: 50px;
+            margin: 3px 0 3px 2px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+
+            .avatar {
+                flex-basis: 32px;
+                width: 32px;
+                height: 32px;
+                background-color: #508afe;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 10px;
+                color: white;
+                flex-shrink: 0;
+                overflow: hidden;
+                user-select: none;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    background-color: white;
+                }
+            }
+
+            .name {
+                font-size: 12px;
+                text-align: center;
+                color: #8f959e;
+                transform: scale(0.84);
+                text-align: center;
+                line-height: 20px;
+                word-break: break-all;
+                overflow: hidden;
+
+                &.active {
+                    color: #508afe;
+                }
+            }
         }
-      }
 
-      .name {
-        font-size: 12px;
-        text-align: center;
-        color: #8f959e;
-        transform: scale(0.84);
-        text-align: center;
-        line-height: 20px;
-        word-break: break-all;
-        overflow: hidden;
-
-        &.active {
-          color: #508afe;
+        &.shadow {
+            box-shadow: 0 2px 6px 0 rgba(31, 35, 41, 0.05);
         }
-      }
     }
-
-    &.shadow {
-      box-shadow: 0 2px 6px 0 rgba(31, 35, 41, 0.05);
-    }
-  }
 }
 
 .aside-box .main {
-  overflow: hidden;
-  padding: 0;
+    overflow: hidden;
+    padding: 0;
 
-  .empty-data {
-    text-align: center;
-    padding-top: 40px;
-    color: #ccc;
-  }
-
-  .main-menu {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 6px 10px 6px 10px;
-    align-items: center;
-    user-select: none;
-
-    .title {
-      font-size: 12px;
-      font-weight: 600;
-      color: #1f2329;
+    .empty-data {
+        text-align: center;
+        padding-top: 40px;
+        color: #ccc;
     }
 
-    .icon {
-      cursor: pointer;
-    }
-  }
-
-  .talk-item {
-    padding: 8px 10px;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border-left: 3px solid transparent;
-    transition: 0.2s ease-in;
-
-    .avatar-box {
-      height: 35px;
-      width: 35px;
-      flex-shrink: 0;
-      background-color: #508afe;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 14px;
-      color: white;
-      user-select: none;
-      transition: ease 1s;
-      position: relative;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-        height: 100%;
-        background-color: white;
-        border-radius: 3px;
-      }
-
-      .top-mask {
-        width: 100%;
-        height: 100%;
-        background-color: rgba(22, 25, 29, 0.6);
-        position: absolute;
-        top: 0;
-        left: 0;
-        color: white;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-      }
-
-      &:hover .top-mask {
+    .main-menu {
         display: flex;
-      }
-    }
-
-    .card-box {
-      height: 40px;
-      display: flex;
-      align-content: center;
-      flex-direction: column;
-      flex: 1 1;
-      margin-left: 10px;
-      overflow: hidden;
-
-      .title {
-        width: 100%;
-        height: 20px;
-        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 6px 10px 6px 10px;
         align-items: center;
-
-        .card-name {
-          color: #1f2329;
-          font-size: 14px;
-          line-height: 20px;
-          flex: 1 1;
-          display: -webkit-flex;
-          display: -ms-flexbox;
-          display: flex;
-          align-items: center;
-          overflow: hidden;
-
-          .nickname {
-            font-weight: 400;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-right: 3px;
-          }
-
-          .top {
-            color: #dc9b04 !important;
-            background-color: #faf1d1 !important;
-          }
-
-          .group {
-            color: #3370ff !important;
-            background-color: #e1eaff !important;
-            font-size: 13px;
-          }
-
-          .disturb {
-            color: #98999c !important;
-            background-color: #ecedf1 !important;
-            i {
-              font-size: 12px;
-            }
-          }
-        }
-      }
-
-      .card-time {
-        color: #8f959e;
-        font-size: 12px;
-        margin-left: 10px;
         user-select: none;
-      }
 
-      .content {
-        font-size: 13px;
-        line-height: 18px;
-        color: #8f959e;
-        margin-top: 3px;
-        font-weight: 300;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-
-        span:first-child {
-          margin-right: 5px;
+        .title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1f2329;
         }
 
-        .online-color {
-          color: #4aa71c;
-          font-weight: 300;
+        .icon {
+            cursor: pointer;
+        }
+    }
+
+    .talk-item {
+        padding: 8px 10px;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-left: 3px solid transparent;
+        transition: 0.2s ease-in;
+
+        .avatar-box {
+            height: 35px;
+            width: 35px;
+            flex-shrink: 0;
+            background-color: #508afe;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: white;
+            user-select: none;
+            transition: ease 1s;
+            position: relative;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                background-color: white;
+                border-radius: 3px;
+            }
+
+            .top-mask {
+                width: 100%;
+                height: 100%;
+                background-color: rgba(22, 25, 29, 0.6);
+                position: absolute;
+                top: 0;
+                left: 0;
+                color: white;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+            }
+
+            &:hover .top-mask {
+                display: flex;
+            }
         }
 
-        .draft-color {
-          color: red;
-          font-weight: 300;
+        .card-box {
+            height: 40px;
+            display: flex;
+            align-content: center;
+            flex-direction: column;
+            flex: 1 1;
+            margin-left: 10px;
+            overflow: hidden;
+
+            .title {
+                width: 100%;
+                height: 20px;
+                display: flex;
+                align-items: center;
+
+                .card-name {
+                    color: #1f2329;
+                    font-size: 14px;
+                    line-height: 20px;
+                    flex: 1 1;
+                    display: -webkit-flex;
+                    display: -ms-flexbox;
+                    display: flex;
+                    align-items: center;
+                    overflow: hidden;
+
+                    .nickname {
+                        font-weight: 400;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        margin-right: 3px;
+                    }
+
+                    .top {
+                        color: #dc9b04 !important;
+                        background-color: #faf1d1 !important;
+                    }
+
+                    .group {
+                        color: #3370ff !important;
+                        background-color: #e1eaff !important;
+                        font-size: 13px;
+                    }
+
+                    .disturb {
+                        color: #98999c !important;
+                        background-color: #ecedf1 !important;
+
+                        i {
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+
+            .card-time {
+                color: #8f959e;
+                font-size: 12px;
+                margin-left: 10px;
+                user-select: none;
+            }
+
+            .content {
+                font-size: 13px;
+                line-height: 18px;
+                color: #8f959e;
+                margin-top: 3px;
+                font-weight: 300;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+
+                span:first-child {
+                    margin-right: 5px;
+                }
+
+                .online-color {
+                    color: #4aa71c;
+                    font-weight: 300;
+                }
+
+                .draft-color {
+                    color: red;
+                    font-weight: 300;
+                }
+            }
         }
-      }
-    }
 
-    &:hover {
-      background-color: #eff0f1;
-    }
+        &:hover {
+            background-color: #eff0f1;
+        }
 
-    &.active {
-      .avatar-box {
-        border-radius: 5px;
-      }
+        &.active {
+            .avatar-box {
+                border-radius: 5px;
+            }
 
-      background-color: #eff0f1;
+            background-color: #eff0f1;
+        }
     }
-  }
 }
 
 
 @media screen and (max-width: 800px) {
-  .aside-box {
-    width: 220px !important;
+    .aside-box {
+        width: 220px !important;
 
-    .subheader {
-      display: none;
-    }
+        .subheader {
+            display: none;
+        }
 
-    .card-box .larkc-tag {
-      display: none;
+        .card-box .larkc-tag {
+            display: none;
+        }
     }
-  }
 }
 </style>

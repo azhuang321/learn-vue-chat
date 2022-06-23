@@ -7,7 +7,13 @@ import '@/assets/css/base.scss';
 
 import '@/style/index.scss';
 
-createApp(App)
-    .use(router)
+import registerDirectives from './core/directives';// 自定义指令
+
+
+const app = createApp(App);
+registerDirectives(app);
+
+
+app.use(router)
     .use(store)
     .mount('#app');
