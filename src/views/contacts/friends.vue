@@ -2,55 +2,55 @@
     <div class="panel">
         <el-container class="full-height">
             <el-header height="60px" class="header no-select border">
-                <p>我的好友({{ items.length }})</p>
+                <p>我的好友({{ friendsList.length }})</p>
             </el-header>
             <el-main class="panel-body no-padding lum-scrollbar">
-                <template v-if="status == 0">
+                <template v-if="friendsListStatue === 0">
                     <Loading/>
                 </template>
-                <template v-else-if="status == 1 && items.length == 0">
+                <template v-else-if="friendsListStatue === 1 && friendsList.length === 0">
                     <Empty text="暂无好友"/>
                 </template>
 
-                <template v-if="status == 1">
+                <template v-if="friendsListStatue === 1">
                     <div
-                        v-for="(item, index) in items"
+                        v-for="(item, index) in friendsList"
                         :key="item.account"
                         class="data-item"
                         @click="touser(item, index)"
                     >
-                        <!--            <el-avatar
-                                      class="avatar"
-                                      shape="square"
-                                      :size="35"
-                                      :src="item.avatar"
-                                    >
-                                      {{ item.nickname.substr(0, 1) }}
-                                    </el-avatar>-->
+                        <el-avatar
+                            class="avatar"
+                            shape="square"
+                            :size="35"
+                            :src="item.avatar ? item.avatar : defaultAvatar"
+                        >
+                            {{ item.account.substr(0, 1) }}
+                        </el-avatar>
                         <div class="card">
                             <div class="title">
                                 <span class="name">
-                                  {{ item.account ? item.account : item.nickname }}
+                                  {{ item.account ? item.account : item.nick }}
                                 </span>
                                 <div v-show="item.online == 1" class="larkc-tag agree">
                                     在线
                                 </div>
                             </div>
                             <div class="content">
-                                [个性签名] 「{{ item.motto ? item.motto : '未设置' }}」
+                                [个性签名] 「{{ item.sign ? item.sign : '未设置' }}」
                             </div>
                         </div>
 
                         <div class="apply-from" @click.prevent.stop>
                             <el-button
-                                size="mini"
+                                size="small"
                                 type="primary"
                                 icon="el-icon-s-promotion"
                                 @click="toTalk(1, item.id)"
                             >发送消息
                             </el-button>
                             <el-button
-                                size="mini"
+                                size="small"
                                 type="danger"
                                 icon="el-icon-delete"
                                 @click="deleteFriend(item, index)"
@@ -65,12 +65,41 @@
 </template>
 
 <script>
-import { ServeGetContacts, ServeDeleteContact } from '@/api/contacts';
 import Empty from '@/components/global/Empty.vue';
 import Loading from '@/components/global/Loading.vue';
 import { toTalk } from '@/utils/talk';
-
 import { getFriends } from '@/utils/nim/user';
+
+import defaultAvatar from '@/assets/image/detault-avatar.jpg';
+
+const useFriendsListEffect = () => {
+    const friendsList = reactive([]);
+    const friendsListStatue = ref(0);
+    const getFriendsListFunc = () => {
+        getFriends().then((friends) => {
+            friendsList.length = 0;
+            friendsList.push(...friends);
+            friendsListStatue.value = 1;
+        });
+    };
+    return {
+        defaultAvatar,
+        friendsListStatue,
+        friendsList,
+        getFriendsListFunc
+    };
+};
+
+const useShowUserInfoEffect = () => {
+    // // 查看用户名片
+    // touser (item, index) {
+    //     this.$user(item.id, {
+    //         editRemarkCallbak: data => {
+    //             this.items[index].friend_remark = data.remarks;
+    //         }
+    //     });
+    // },
+};
 
 export default {
     components: {
@@ -79,22 +108,11 @@ export default {
     },
     data () {
         return {
-            // items: [],
+            // friendsList: [],
             status: 1
         };
     },
     methods: {
-        // // 加载好友列表
-        // loadFriends () {
-        //
-        //     // console.log(window.NIM);
-        //     // ServeGetContacts().then(res => {
-        //     //     if (res.code == 200) {
-        //     //         this.status = 1;
-        //     //         this.items = res.data;
-        //     //     }
-        //     // });
-        // },
         //
         // // 删除好友
         // deleteFriend (item, index) {
@@ -130,14 +148,6 @@ export default {
         //     });
         // },
         //
-        // // 查看用户名片
-        // touser (item, index) {
-        //     this.$user(item.id, {
-        //         editRemarkCallbak: data => {
-        //             this.items[index].friend_remark = data.remarks;
-        //         }
-        //     });
-        // },
         //
         // // 跳转聊天页面
         // toTalk (talk_type, receiver_id) {
@@ -148,22 +158,15 @@ export default {
 </script>
 
 <script setup>
-// todo 异步  suspense
-console.dir(123);
-const items = reactive([]);
+const { defaultAvatar, friendsListStatue, friendsList, getFriendsListFunc } = useFriendsListEffect();
+onActivated(getFriendsListFunc);
 
-onActivated(() => {
-    console.dir(4);
-
-    getFriends().then((friendsList) => {
-        items.push(...friendsList);
-        console.dir(6);
-    });
+// todo 封装消息提示
+ElNotification({
+    type: 'success',
+    title: 'Title',
+    message: h('i', { style: 'color: teal' }, 'This is a reminder')
 });
-
-
-console.dir(67);
-
 
 </script>
 <style lang="scss" scoped>

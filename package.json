@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.4",
+    "@naturefw/storage": "^0.2.6",
     "@vueuse/core": "^8.6.0",
     "axios": "^0.27.2",
     "babel-plugin-prismjs": "^2.1.0",

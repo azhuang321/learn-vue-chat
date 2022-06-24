@@ -1117,6 +1117,11 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@naturefw/storage@^0.2.6":
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/@naturefw/storage/-/storage-0.2.6.tgz#a52388f77dfd8ba12ed5626a2c182c49bc98e1cd"
+  integrity sha512-paY2rEVactXU1PftqHif7rEqN3oIa644kOeAFRKWfDjIOaPbraAg9EOXndInn2B9KT8YuTWdPwGEuMSUoJiGoQ==
+
 "@node-ipc/js-queue@2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@node-ipc/js-queue/-/js-queue-2.0.3.tgz#ac7fe33d766fa53e233ef8fedaf3443a01c5a4cd"

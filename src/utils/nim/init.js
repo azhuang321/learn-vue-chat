@@ -5,13 +5,12 @@ import { onMyInfo } from '@/utils/nim/user';
 await import(`../../nim_sdk/${config.sdk}.js`);
 let nim = null;
 
-
 /**
  * 文档地址
  * http://dev.yunxin.163.com/docs/interface/%E5%8D%B3%E6%97%B6%E9%80%9A%E8%AE%AFWeb%E7%AB%AF/NIMSDK-Web/NIM.html#getUser
  */
 export const getNimInstance = async () => {
-    // todo 监听状态的改变
+    // todo 监听状态的改变 onConnect 中改变状态
     if (nim === null) {
         await new Promise((resolve, reject) => {
             nim = window.NIM.getInstance({
