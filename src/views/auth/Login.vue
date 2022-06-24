@@ -68,7 +68,7 @@
 import { setToken } from '@/utils/auth';
 import { ServeLogin } from '@/api/auth';
 
-import { initNim } from '@/utils/nim/init';
+import { getNimInstance } from '@/utils/nim/init';
 import { isConnect } from '@/utils/nim/connection';
 import { useStore } from 'vuex';
 
@@ -117,7 +117,7 @@ const useFormDataEffect = () => {
 const useLoginEffect = () => {
     const loginLoading = ref(false);
     const login = (form) => {
-        initNim();
+        getNimInstance();
         watch(isConnect, (isConnect) => {
             if (isConnect === true) {
                 loginLoading.value = !isConnect;

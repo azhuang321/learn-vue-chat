@@ -30,7 +30,7 @@
                         <div class="card">
                             <div class="title">
                                 <span class="name">
-                                  {{ item.friend_remark ? item.friend_remark : item.nickname }}
+                                  {{ item.account ? item.account : item.nickname }}
                                 </span>
                                 <div v-show="item.online == 1" class="larkc-tag agree">
                                     在线
@@ -70,7 +70,6 @@ import Empty from '@/components/global/Empty.vue';
 import Loading from '@/components/global/Loading.vue';
 import { toTalk } from '@/utils/talk';
 
-import { useStore } from 'vuex';
 import { getFriends } from '@/utils/nim/user';
 
 export default {
@@ -85,85 +84,85 @@ export default {
         };
     },
     methods: {
-        // 加载好友列表
-        loadFriends () {
-
-            // console.log(window.NIM);
-            // ServeGetContacts().then(res => {
-            //     if (res.code == 200) {
-            //         this.status = 1;
-            //         this.items = res.data;
-            //     }
-            // });
-        },
-
-        // 删除好友
-        deleteFriend (item, index) {
-            const nickname = item.friend_remark || item.nickname;
-            this.$alert(`您确定要删除【${nickname}】好友吗？`, '温馨提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                showCancelButton: true,
-                closeOnClickModal: true,
-                callback: action => {
-                    if (action != 'confirm') {
-                        return false;
-                    }
-
-                    const friend_id = item.id;
-                    ServeDeleteContact({
-                        friend_id
-                    }).then(res => {
-                        if (res.code == 200) {
-                            this.$delete(this.items, index);
-                            this.$message({
-                                message: `好友 【${nickname}】已删除 ...`,
-                                type: 'success'
-                            });
-                        } else {
-                            this.$message({
-                                message: `好友 【${nickname}】删除失败 ...`,
-                                type: 'info'
-                            });
-                        }
-                    });
-                }
-            });
-        },
-
-        // 查看用户名片
-        touser (item, index) {
-            this.$user(item.id, {
-                editRemarkCallbak: data => {
-                    this.items[index].friend_remark = data.remarks;
-                }
-            });
-        },
-
-        // 跳转聊天页面
-        toTalk (talk_type, receiver_id) {
-            toTalk(talk_type, receiver_id);
-        }
+        // // 加载好友列表
+        // loadFriends () {
+        //
+        //     // console.log(window.NIM);
+        //     // ServeGetContacts().then(res => {
+        //     //     if (res.code == 200) {
+        //     //         this.status = 1;
+        //     //         this.items = res.data;
+        //     //     }
+        //     // });
+        // },
+        //
+        // // 删除好友
+        // deleteFriend (item, index) {
+        //     const nickname = item.friend_remark || item.nickname;
+        //     this.$alert(`您确定要删除【${nickname}】好友吗？`, '温馨提示', {
+        //         confirmButtonText: '确定',
+        //         cancelButtonText: '取消',
+        //         showCancelButton: true,
+        //         closeOnClickModal: true,
+        //         callback: action => {
+        //             if (action != 'confirm') {
+        //                 return false;
+        //             }
+        //
+        //             const friend_id = item.id;
+        //             ServeDeleteContact({
+        //                 friend_id
+        //             }).then(res => {
+        //                 if (res.code == 200) {
+        //                     this.$delete(this.items, index);
+        //                     this.$message({
+        //                         message: `好友 【${nickname}】已删除 ...`,
+        //                         type: 'success'
+        //                     });
+        //                 } else {
+        //                     this.$message({
+        //                         message: `好友 【${nickname}】删除失败 ...`,
+        //                         type: 'info'
+        //                     });
+        //                 }
+        //             });
+        //         }
+        //     });
+        // },
+        //
+        // // 查看用户名片
+        // touser (item, index) {
+        //     this.$user(item.id, {
+        //         editRemarkCallbak: data => {
+        //             this.items[index].friend_remark = data.remarks;
+        //         }
+        //     });
+        // },
+        //
+        // // 跳转聊天页面
+        // toTalk (talk_type, receiver_id) {
+        //     toTalk(talk_type, receiver_id);
+        // }
     }
 };
 </script>
 
 <script setup>
-const store = useStore();
-const nim = store.getters.nimInstance;
-const friendList = reactive([]);
+// todo 异步  suspense
+console.dir(123);
+const items = reactive([]);
 
-const items = computed(() => friendList);
+onActivated(() => {
+    console.dir(4);
 
-console.dir(items);
-setTimeout(() => {
-    getFriends(nim, friendList);
-}, 2000);
+    getFriends().then((friendsList) => {
+        items.push(...friendsList);
+        console.dir(6);
+    });
+});
 
 
-setTimeout(() => {
-    console.dir(items.value);
-}, 4000);
+console.dir(67);
 
 
 </script>

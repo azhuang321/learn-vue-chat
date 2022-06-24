@@ -4,9 +4,6 @@
   </div>
 </template>
 <script>
-import { useStore } from 'vuex';
-import { CONNECT_NIM } from '@/store/modules/nim/constants';
-
 export default {
     name: 'App',
     data () {
@@ -28,7 +25,4 @@ export default {
 };
 </script>
 <script setup>
-// 发起连接
-const store = useStore();
-store.dispatch(CONNECT_NIM);
 </script>

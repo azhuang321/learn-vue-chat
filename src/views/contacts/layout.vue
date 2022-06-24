@@ -58,7 +58,18 @@
 
         <!-- 聊天面板容器 -->
         <el-main class="no-padding ov-hidden">
-          <router-view />
+<!--            异步 promise-->
+<!--          <suspense>
+
+          </suspense>-->
+
+            <router-view v-slot="{ Component }">
+                <keep-alive>
+                    <component :is="Component" />
+                </keep-alive>
+            </router-view>
+
+
         </el-main>
       </el-container>
     </MainLayout>
@@ -71,7 +82,7 @@
     />
 
     <!-- 用户查询 -->
-    <UserSearch ref="searchUsers" />
+<!--    <UserSearch ref="searchUsers" />-->
   </div>
 </template>
 <script>
@@ -87,13 +98,13 @@ export default {
     name: 'ContactsPage',
     components: {
         MainLayout,
-        GroupLaunch,
-        UserSearch
+        GroupLaunch
+        // UserSearch
     },
     data () {
         return {
-            Plus,
-            Search,
+            Plus: markRaw(Plus),
+            Search: markRaw(Search),
             launchGroupShow: false,
 
             // 查询关键词
@@ -128,7 +139,7 @@ export default {
             if (type == 1) {
                 this.launchGroupShow = true;
             } else {
-                this.$refs.searchUsers.open();
+                // this.$refs.searchUsers.open();
             }
         },
 

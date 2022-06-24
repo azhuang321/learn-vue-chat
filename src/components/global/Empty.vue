@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import defaultImg from '@/assets/image/no-oncall.6b776fcf.png';
 export default {
     name: 'Empty',
     props: {
@@ -17,7 +18,7 @@ export default {
         },
         src: {
             type: String,
-            default: import('@/assets/image/no-oncall.6b776fcf.png')
+            default: defaultImg
         }
     },
     data () {

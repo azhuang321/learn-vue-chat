@@ -22,6 +22,10 @@ module.exports = {
         semi: ['warn', 'always'],
         // 允许空行数
         'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 0 }],
-        indent: ['error', 4]
+        indent: ['error', 4],
+        'prefer-const': ['error', {
+            destructuring: 'any',
+            ignoreReadBeforeAssign: false
+        }]
     }
 };
