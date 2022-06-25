@@ -22,7 +22,7 @@
     "nprogress": "^0.2.0",
     "prismjs": "^1.28.0",
     "svg-sprite-loader": "^6.0.11",
-    "vue": "^3.2.25",
+    "vue": "^3.2.27",
     "vue-cropper": "^0.5.8",
     "vue-prism-editor": "^2.0.0-alpha.2",
     "vue-router": "^4.0.13",

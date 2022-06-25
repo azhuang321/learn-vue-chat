@@ -162,12 +162,14 @@ const { defaultAvatar, friendsListStatue, friendsList, getFriendsListFunc } = us
 onActivated(getFriendsListFunc);
 
 // todo 封装消息提示
-ElNotification({
-    type: 'success',
-    title: 'Title',
-    message: h('i', { style: 'color: teal' }, 'This is a reminder')
-});
+// ElNotification({
+//     type: 'success',
+//     title: 'Title',
+//     message: h('i', { style: 'color: teal' }, 'This is a reminder')
+// });
 
+const v3popup = inject('v3popup');
+console.dir(v3popup);
 </script>
 <style lang="scss" scoped>
 @import '@/assets/css/page/contacts.scss';

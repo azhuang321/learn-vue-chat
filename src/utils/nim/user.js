@@ -1,11 +1,11 @@
 import { getNimInstance } from '@/utils/nim/init';
 
-// 用户信息回调
+// 回调: 用户信息
 const onMyInfo = (obj) => {
     console.log('my info', obj);
 };
 
-// 获取用户好友回调
+// 获取用户好友
 const getFriends = async () => {
     const nim = await getNimInstance();
     return new Promise((resolve, reject) => {
