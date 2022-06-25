@@ -1,36 +1,52 @@
+import registerDirectives from '@/core/directives';// 自定义指令
 import UserCardDetail from './UserCardDetail.vue';
 
 let $inst;
 // 创建挂载实例
-const createMount = (opts) => {
+const createMount = (options) => {
     const mountNode = document.createElement('div');
     document.body.appendChild(mountNode);
 
     const app = createApp(UserCardDetail, {
-        ...opts,
-        modelValue: true,
-        remove () {
-            app.unmount(mountNode);
-            document.body.removeChild(mountNode);
-        }
+        ...options
     });
-    return app.mount(mountNode);
+    registerDirectives(app);
+
+
+    // close: () => {
+    //     console.dir(234);
+    //     app.unmount(mountNode);
+    //     document.body.removeChild(mountNode);
+    // },
+    //     changeRemark: data => {
+    //     options.editRemarkCallback && options.editRemarkCallback(data);
+    // }
+
+    const close = () => {
+        console.dir(234);
+        app.unmount(mountNode);
+        document.body.removeChild(mountNode);
+    };
+
+    const mount = app.mount(mountNode);
+
+    return { mount, close };
 };
 
-function V3Popup (options = {}) {
-    options.id = options.id || 'v3popup_' + generateId();
-    $inst = createMount(options);
-
+function user (user_id, options = {}) {
+    $inst = createMount({
+        ...options,
+        props: {
+            user_id
+        }
+    });
     return $inst;
 }
 
 
 const myPlugin = {
     install (app, options) {
-        console.dir(123);
-        app.component('v3-popup', UserCardDetail);
-        // app.config.globalProperties.$v3popup = V3Popup
-        app.provide('v3popup', V3Popup);
+        app.provide('ShowUserCardFunc', user);
     }
 };
 

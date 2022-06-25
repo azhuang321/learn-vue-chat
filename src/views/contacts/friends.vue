@@ -17,7 +17,7 @@
                         v-for="(item, index) in friendsList"
                         :key="item.account"
                         class="data-item"
-                        @click="touser(item, index)"
+                        @click="showCardFunc(item, index)"
                     >
                         <el-avatar
                             class="avatar"
@@ -90,15 +90,20 @@ const useFriendsListEffect = () => {
     };
 };
 
+// 查看用户名片
 const useShowUserInfoEffect = () => {
-    // // 查看用户名片
-    // touser (item, index) {
-    //     this.$user(item.id, {
-    //         editRemarkCallbak: data => {
-    //             this.items[index].friend_remark = data.remarks;
-    //         }
-    //     });
-    // },
+    const showCard = inject('ShowUserCardFunc');
+    console.log(showCard);
+    const showCardFunc = (item, index) => {
+        showCard(item.id, {
+            editRemarkCallback: data => {
+                this.items[index].friend_remark = data.remarks;
+            }
+        });
+    };
+    return {
+        showCardFunc
+    };
 };
 
 export default {
@@ -159,7 +164,9 @@ export default {
 
 <script setup>
 const { defaultAvatar, friendsListStatue, friendsList, getFriendsListFunc } = useFriendsListEffect();
+const { showCardFunc } = useShowUserInfoEffect();
 onActivated(getFriendsListFunc);
+
 
 // todo 封装消息提示
 // ElNotification({
@@ -168,8 +175,6 @@ onActivated(getFriendsListFunc);
 //     message: h('i', { style: 'color: teal' }, 'This is a reminder')
 // });
 
-const v3popup = inject('v3popup');
-console.dir(v3popup);
 </script>
 <style lang="scss" scoped>
 @import '@/assets/css/page/contacts.scss';
