@@ -93,9 +93,8 @@ const useFriendsListEffect = () => {
 // 查看用户名片
 const useShowUserInfoEffect = () => {
     const showCard = inject('ShowUserCardFunc');
-    console.log(showCard);
     const showCardFunc = (item, index) => {
-        showCard(item.id, {
+        showCard(item.account, {
             editRemarkCallback: data => {
                 this.items[index].friend_remark = data.remarks;
             }

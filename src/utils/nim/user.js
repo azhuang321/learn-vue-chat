@@ -21,7 +21,7 @@ const getFriends = async () => {
     });
 };
 
-// 获取用户名片
+// 获取多个用户名片
 const getUsers = async (accounts, isSync = true) => {
     const nim = await getNimInstance();
     return new Promise((resolve, reject) => {
@@ -36,8 +36,23 @@ const getUsers = async (accounts, isSync = true) => {
     });
 };
 
+// 获取单个个用户名片
+const getUser = async (account, isSync = true) => {
+    const nim = await getNimInstance();
+    return new Promise((resolve, reject) => {
+        nim.getUser({
+            account: account,
+            sync: isSync,
+            done: (error, user) => {
+                if (error) return reject(error);
+                resolve(user);
+            }
+        });
+    });
+};
+
 export {
-    onMyInfo, getFriends, getUsers
+    onMyInfo, getFriends, getUsers, getUser
 };
 
 

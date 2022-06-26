@@ -9,7 +9,7 @@
                 <div class="user-header">
                     <div class="avatar">
                         <div class="avatar-box">
-                            <img :src="detail.avatar || ''" :onerror="defaultAvatar"/>
+                            <img :src="detail.avatar || defaultAvatar" :onerror="defaultAvatar"/>
                         </div>
                     </div>
                     <div class="nickname">
@@ -31,7 +31,7 @@
                 <div class="card-rows no-select">
                     <div class="card-row">
                         <label>手机</label>
-                        <span>{{ detail.mobile | mobile }}</span>
+                        <span>{{ detail.mobile }}</span>
                     </div>
                     <div class="card-row">
                         <label>昵称</label>
@@ -39,28 +39,28 @@
                     </div>
                     <div class="card-row">
                         <label>性别</label>
-                        <span>{{ detail.gender | gender }}</span>
+                        <span>{{ userGender }}</span>
                     </div>
-                    <div v-show="detail.friend_status == 2" class="card-row">
+                    <div class="card-row">
                         <label>备注</label>
-                        <span v-if="editRemark.isShow == false">{{
-                                detail.nickname_remark ? detail.nickname_remark : '暂无备注'
-                            }}</span>
+                        <span v-if="remarkData.isShow === false">
+                            {{detail.alias ? detail.alias : '暂无备注' }}
+                        </span>
                         <span v-else>
-              <input
-                  v-model="editRemark.text"
-                  v-focus
-                  class="friend-remark"
-                  type="text"
-                  @keyup.enter="editRemarkSubmit"
-              />
-            </span>
-                        <i
-                            v-show="!editRemark.isShow"
-                            class="el-icon-edit-outline"
-                            @click="clickEditRemark"
+                          <input
+                              v-model="remarkData.text"
+                              v-focus
+                              class="friend-remark"
+                              type="text"
+                              @keyup.enter="editRemarkSubmit"
+                          />
+                        </span>
+                        <i-ep-Edit
+                            v-show="!remarkData.isShow"
+                            @click="handClickEditRemark"
                         />
                     </div>
+
                     <div class="card-row">
                         <label>邮箱</label>
                         <span>未设置</span>
@@ -126,56 +126,77 @@ import { ServeSearchUser, ServeCreateContact, ServeEditContactRemark } from '@/a
 import { toTalk } from '@/utils/talk';
 
 import defaultUserBanner from '@/assets/image/default-user-banner.png';
+import { getUser } from '@/utils/nim/user';
 import defaultAvatar from '@/assets/image/detault-avatar.jpg';
 
+const useUserCardShowEffect = () => {
+    const { props } = getCurrentInstance();
+    const detail = reactive({
+        mobile: '',
+        nickname: '',
+        avatar: '',
+        motto: '',
+        friend_status: 0,
+        friend_apply: 0,
+        alias: '',
+        bag: defaultUserBanner,
+        gender: 0
+    });
+
+    const genderObj = {
+        male: '男',
+        female: '女',
+        unknown: '未知'
+    };
+    const userGender = computed({
+        get: () => {
+            return genderObj[detail.gender];
+        }
+    });
+
+    const account = props.account;
+    getUser(account).then((user) => {
+        detail.mobile = user.tel;
+        detail.nickname = user.nick;
+        detail.avatar = user.avatar;
+        detail.gender = user.gender;
+        detail.motto = user.sign;
+        detail.alias = user.alias;
+    });
+
+    const close = () => {
+        props.close();
+    };
+    return { close, detail, userGender, defaultAvatar };
+};
+
+const useUserRemarkEffect = () => {
+    const remarkData = reactive({
+        isShow: false,
+        text: ''
+    });
+    const { detail } = useUserCardShowEffect();
+
+    // 点击编辑备注信息
+    const handClickEditRemark = () => {
+        console.dir(12);
+        remarkData.isShow = true;
+        remarkData.text = detail.alias;
+    };
+    return { remarkData, handClickEditRemark };
+};
 export default {
     name: 'UserCardDetail',
-    emits: ['close'],
     props: {
-        user_id: {
+        account: {
             type: [Number, String],
-            default: 0
-        }
-    },
-    setup () {
-        const { proxy } = getCurrentInstance();
-        const close = () => {
-            console.dir(12312);
-            proxy.$emit('close');
-        };
-        return { close };
-    },
-    filters: {
-        gender (value) {
-            const arr = ['未知', '男', '女'];
-            return arr[value] || '未知';
+            default: ''
         },
-        // 手机号格式化
-        mobile (value) {
-            return (
-                value.substr(0, 3) + ' ' + value.substr(3, 4) + ' ' + value.substr(7, 4)
-            );
-        }
+        close: Function
     },
     data () {
         return {
-            detail: {
-                mobile: '',
-                nickname: '',
-                avatar: '',
-                motto: '',
-                friend_status: 0,
-                friend_apply: 0,
-                nickname_remark: '',
-                bag: defaultUserBanner,
-                gender: 0
-            },
-            defaultAvatar,
-            // 好友备注表单
-            editRemark: {
-                isShow: false,
-                text: ''
-            },
+
 
             // 好友申请表单
             apply: {
@@ -186,34 +207,8 @@ export default {
             contacts: false
         };
     },
-    created () {
-        // this.loadUserDetail();
-    },
     methods: {
-        // close () {
-        //     console.dir('close');
-        //     // if (this.contacts) return false;
-        //
-        //     this.$emit('close');
-        // },
 
-        // 点击编辑备注信息
-        clickEditRemark () {
-            this.editRemark.isShow = true;
-            this.editRemark.text = this.detail.nickname_remark;
-        },
-
-        // 获取用户信息
-        loadUserDetail () {
-            ServeSearchUser({
-                user_id: this.user_id
-            }).then(res => {
-                if (res.code == 200) {
-                    this.detail.user_id = res.data.id;
-                    Object.assign(this.detail, res.data);
-                }
-            });
-        },
 
         // 发送添加好友申请
         sendApply () {
@@ -265,6 +260,12 @@ export default {
         }
     }
 };
+</script>
+
+<script setup>
+const { close, detail, userGender, defaultAvatar } = useUserCardShowEffect();
+const { remarkData, handClickEditRemark } = useUserRemarkEffect();
+
 </script>
 <style lang="scss" scoped>
 .container {
@@ -434,11 +435,15 @@ export default {
         }
 
         .friend-remark {
+            border: none;
             border-bottom: 1px dashed #bec3d0;
             padding-bottom: 2px;
             color: #736f6f;
             width: 60%;
             padding-right: 5px;
+            &:focus{
+                outline: none;
+            }
         }
 
         .el-icon-edit-outline {

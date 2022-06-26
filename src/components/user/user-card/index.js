@@ -1,4 +1,4 @@
-import registerDirectives from '@/core/directives';// 自定义指令
+import registerDirectives from '@/core/directives'; // 自定义指令
 import UserCardDetail from './UserCardDetail.vue';
 
 let $inst;
@@ -8,37 +8,23 @@ const createMount = (options) => {
     document.body.appendChild(mountNode);
 
     const app = createApp(UserCardDetail, {
-        ...options
+        ...options,
+        close: () => {
+            app.unmount();
+            document.body.removeChild(mountNode);
+        },
+        changeRemark: data => {
+            options.editRemarkCallback && options.editRemarkCallback(data);
+        }
     });
     registerDirectives(app);
-
-
-    // close: () => {
-    //     console.dir(234);
-    //     app.unmount(mountNode);
-    //     document.body.removeChild(mountNode);
-    // },
-    //     changeRemark: data => {
-    //     options.editRemarkCallback && options.editRemarkCallback(data);
-    // }
-
-    const close = () => {
-        console.dir(234);
-        app.unmount(mountNode);
-        document.body.removeChild(mountNode);
-    };
-
-    const mount = app.mount(mountNode);
-
-    return { mount, close };
+    return app.mount(mountNode);
 };
 
-function user (user_id, options = {}) {
+function user (account, options = {}) {
     $inst = createMount({
         ...options,
-        props: {
-            user_id
-        }
+        account: account
     });
     return $inst;
 }
