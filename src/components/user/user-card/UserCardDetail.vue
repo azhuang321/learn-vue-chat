@@ -44,8 +44,7 @@
                     <div class="card-row">
                         <label>备注</label>
                         <span v-if="remarkData.isShow === false">
-                            {{detail.alias ? detail.alias : '暂无备注' }}
-                            {{detail}}
+                            {{remarkData.text ? remarkData.text : '暂无备注' }}
                         </span>
                         <span v-else>
                           <input
@@ -156,18 +155,14 @@ const useUserCardShowEffect = () => {
 };
 
 const useUserRemarkEffect = () => {
+    const { detail, accountInfo } = useUserCardShowEffect();
     const remarkData = reactive({
         isShow: false,
-        text: ''
+        text: detail.alias
     });
-    const { detail, accountInfo } = useUserCardShowEffect();
 
     // 点击编辑备注信息
-    const handClickEditRemark = () => {
-        remarkData.isShow = true;
-        remarkData.text = detail.alias;
-    };
-
+    const handClickEditRemark = () => { remarkData.isShow = true; };
 
     // 编辑好友备注信息
     const saveRemarkLoading = ref(false);
@@ -179,14 +174,13 @@ const useUserRemarkEffect = () => {
             detail.alias = obj.alias;
             saveRemarkLoading.value = false;
             remarkData.isShow = false;
-
-            console.log(detail);
         });
     };
     const handleBlurRemark = () => {
         if (detail.alias === remarkData.text) {
             remarkData.isShow = false;
-            console.log(detail);
+        } else {
+            handleEditRemarkSubmit();
         }
     };
 
