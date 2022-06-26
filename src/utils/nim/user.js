@@ -51,8 +51,24 @@ const getUser = async (account, isSync = true) => {
     });
 };
 
+// 更新用户好友信息
+const updateFriend = async (account, alias = '', custom = '') => {
+    const nim = await getNimInstance();
+    return new Promise((resolve, reject) => {
+        nim.updateFriend({
+            account: account,
+            alias: alias,
+            done: (error, obj) => {
+                if (error) return reject(error);
+                resolve(obj);
+            }
+        });
+    });
+};
+
+
 export {
-    onMyInfo, getFriends, getUsers, getUser
+    onMyInfo, getFriends, getUsers, getUser, updateFriend
 };
 
 

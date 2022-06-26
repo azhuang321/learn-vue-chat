@@ -3,7 +3,7 @@ import ClickOutside from 'element-plus/lib/directives/click-outside/index';
 const directives = {
     // 自定义聚焦指令
     focus: {
-        inserted (el) {
+        mounted (el) {
             el.focus();
         }
     },

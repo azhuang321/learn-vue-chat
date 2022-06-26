@@ -21,10 +21,10 @@ const createMount = (options) => {
     return app.mount(mountNode);
 };
 
-function user (account, options = {}) {
+function user (accountInfo, options = {}) {
     $inst = createMount({
         ...options,
-        account: account
+        account_info: accountInfo
     });
     return $inst;
 }

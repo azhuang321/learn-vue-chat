@@ -45,6 +45,7 @@
                         <label>备注</label>
                         <span v-if="remarkData.isShow === false">
                             {{detail.alias ? detail.alias : '暂无备注' }}
+                            {{detail}}
                         </span>
                         <span v-else>
                           <input
@@ -52,8 +53,17 @@
                               v-focus
                               class="friend-remark"
                               type="text"
-                              @keyup.enter="editRemarkSubmit"
+                              @blur="handleBlurRemark"
+                              @keyup.enter="handleEditRemarkSubmit"
                           />
+                            <el-button
+                                class="submit-btn"
+                                :loading="saveRemarkLoading"
+                            />
+                            <i-ep-Select
+                                v-show="remarkData.isShow"
+                                @click="handleEditRemarkSubmit"
+                            />
                         </span>
                         <i-ep-Edit
                             v-show="!remarkData.isShow"
@@ -63,34 +73,18 @@
 
                     <div class="card-row">
                         <label>邮箱</label>
-                        <span>未设置</span>
+                        <span v-if="detail.email">{{ detail.email }}</span>
+                        <span v-else>未设置</span>
                     </div>
                 </div>
             </el-main>
             <el-footer
-                v-show="detail.friend_status !== 0"
                 class="no-padding footer"
                 height="50px"
             >
                 <el-button
-                    v-if="detail.friend_status == 1 && detail.friend_apply == 0"
                     type="primary"
-                    size="small"
-                    icon="el-icon-circle-plus-outline"
-                    @click="apply.isShow = true"
-                >添加好友
-                </el-button>
-                <el-button
-                    v-else-if="detail.friend_apply == 1"
-                    type="primary"
-                    size="small"
-                >已发送好友申请，请耐心等待...
-                </el-button>
-                <el-button
-                    v-else-if="detail.friend_status == 2"
-                    type="primary"
-                    size="small"
-                    icon="el-icon-s-promotion"
+                    :icon="PromotionIcon"
                     @click="sendMessage(detail)"
                 >发消息
                 </el-button>
@@ -126,21 +120,22 @@ import { ServeSearchUser, ServeCreateContact, ServeEditContactRemark } from '@/a
 import { toTalk } from '@/utils/talk';
 
 import defaultUserBanner from '@/assets/image/default-user-banner.png';
-import { getUser } from '@/utils/nim/user';
+import { getUser, updateFriend } from '@/utils/nim/user';
 import defaultAvatar from '@/assets/image/detault-avatar.jpg';
+import { Promotion } from '@element-plus/icons-vue';
 
 const useUserCardShowEffect = () => {
     const { props } = getCurrentInstance();
+    const accountInfo = props.account_info;
     const detail = reactive({
-        mobile: '',
-        nickname: '',
-        avatar: '',
-        motto: '',
-        friend_status: 0,
-        friend_apply: 0,
-        alias: '',
+        account: accountInfo.account,
+        mobile: accountInfo.tel,
+        nickname: accountInfo.nick,
+        avatar: accountInfo.avatar,
+        alias: accountInfo.alias,
         bag: defaultUserBanner,
-        gender: 0
+        gender: accountInfo.gender,
+        email: accountInfo.email
     });
 
     const genderObj = {
@@ -149,25 +144,15 @@ const useUserCardShowEffect = () => {
         unknown: '未知'
     };
     const userGender = computed({
-        get: () => {
-            return genderObj[detail.gender];
-        }
-    });
-
-    const account = props.account;
-    getUser(account).then((user) => {
-        detail.mobile = user.tel;
-        detail.nickname = user.nick;
-        detail.avatar = user.avatar;
-        detail.gender = user.gender;
-        detail.motto = user.sign;
-        detail.alias = user.alias;
+        get: () => genderObj[detail.gender]
     });
 
     const close = () => {
         props.close();
     };
-    return { close, detail, userGender, defaultAvatar };
+
+    const PromotionIcon = markRaw(Promotion);
+    return { close, accountInfo, detail, userGender, defaultAvatar, PromotionIcon };
 };
 
 const useUserRemarkEffect = () => {
@@ -175,22 +160,44 @@ const useUserRemarkEffect = () => {
         isShow: false,
         text: ''
     });
-    const { detail } = useUserCardShowEffect();
+    const { detail, accountInfo } = useUserCardShowEffect();
 
     // 点击编辑备注信息
     const handClickEditRemark = () => {
-        console.dir(12);
         remarkData.isShow = true;
         remarkData.text = detail.alias;
     };
-    return { remarkData, handClickEditRemark };
+
+
+    // 编辑好友备注信息
+    const saveRemarkLoading = ref(false);
+    const handleEditRemarkSubmit = () => {
+        saveRemarkLoading.value = true;
+        updateFriend(detail.account, remarkData.text).then((obj) => {
+            remarkData.text = obj.alias;
+            accountInfo.alias = obj.alias;
+            detail.alias = obj.alias;
+            saveRemarkLoading.value = false;
+            remarkData.isShow = false;
+
+            console.log(detail);
+        });
+    };
+    const handleBlurRemark = () => {
+        if (detail.alias === remarkData.text) {
+            remarkData.isShow = false;
+            console.log(detail);
+        }
+    };
+
+    return { remarkData, handClickEditRemark, handleEditRemarkSubmit, handleBlurRemark, saveRemarkLoading };
 };
 export default {
     name: 'UserCardDetail',
     props: {
-        account: {
-            type: [Number, String],
-            default: ''
+        account_info: {
+            type: Object,
+            default: null
         },
         close: Function
     },
@@ -227,26 +234,6 @@ export default {
             });
         },
 
-        // 编辑好友备注信息
-        editRemarkSubmit () {
-            const data = {
-                friend_id: this.detail.user_id,
-                remarks: this.editRemark.text
-            };
-
-            if (data.remarks == this.detail.nickname_remark) {
-                this.editRemark.isShow = false;
-                return;
-            }
-
-            ServeEditContactRemark(data).then(res => {
-                if (res.code == 200) {
-                    this.editRemark.isShow = false;
-                    this.detail.nickname_remark = data.remarks;
-                    this.$emit('changeRemark', data);
-                }
-            });
-        },
 
         // 隐藏申请表单
         closeApply () {
@@ -263,8 +250,8 @@ export default {
 </script>
 
 <script setup>
-const { close, detail, userGender, defaultAvatar } = useUserCardShowEffect();
-const { remarkData, handClickEditRemark } = useUserRemarkEffect();
+const { close, detail, userGender, defaultAvatar, PromotionIcon } = useUserCardShowEffect();
+const { remarkData, handClickEditRemark, handleEditRemarkSubmit, handleBlurRemark, saveRemarkLoading } = useUserRemarkEffect();
 
 </script>
 <style lang="scss" scoped>
@@ -281,10 +268,11 @@ const { remarkData, handClickEditRemark } = useUserRemarkEffect();
 
     .header {
         position: relative;
+        padding:0;
 
         .close {
             position: absolute;
-            right: 25px;
+            right: 5px;
             top: 5px;
             color: white;
             transition: all 1s;
@@ -432,6 +420,9 @@ const { remarkData, handClickEditRemark } = useUserRemarkEffect();
         label {
             margin-right: 25px;
             color: #cbc5c5;
+        }
+        .submit-btn{
+            border:none;
         }
 
         .friend-remark {
