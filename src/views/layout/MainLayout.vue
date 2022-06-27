@@ -152,10 +152,11 @@ const usercard = ref(null);
     padding: 0;
 }
 
+//控制 聊天大小
 .main-layout {
     position: fixed;
-    width: 75%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
     top: 0;
     right: 0;
     bottom: 0;

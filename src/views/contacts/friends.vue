@@ -71,6 +71,7 @@ import { toTalk } from '@/utils/talk';
 import { getFriends } from '@/utils/nim/user';
 
 import defaultAvatar from '@/assets/image/detault-avatar.jpg';
+import { ElNotification } from 'element-plus';
 
 const useFriendsListEffect = () => {
     const friendsList = reactive([]);
@@ -79,6 +80,12 @@ const useFriendsListEffect = () => {
         getFriends().then((friends) => {
             friendsList.length = 0;
             friendsList.push(...friends);
+        }).catch((err) => {
+            ElNotification({
+                type: 'error',
+                message: '获取好友列表失败'
+            });
+        }).finally(() => {
             friendsListStatue.value = 1;
         });
     };
@@ -158,18 +165,18 @@ export default {
 </script>
 
 <script setup>
+import {ElNotification} from "element-plus";
+
 const { defaultAvatar, friendsListStatue, friendsList, getFriendsListFunc } = useFriendsListEffect();
 const { showCardFunc } = useShowUserInfoEffect();
 onActivated(getFriendsListFunc);
 
-
-// todo 封装消息提示
-// ElNotification({
-//     type: 'success',
-//     title: 'Title',
-//     message: h('i', { style: 'color: teal' }, 'This is a reminder')
-// });
-
+setTimeout(() => {
+    ElNotification({
+        type: 'error',
+        message: '获取好友列表失败'
+    });
+},2000)
 </script>
 <style lang="scss" scoped>
 .aside-box {
@@ -337,10 +344,13 @@ onActivated(getFriendsListFunc);
                     display: flex;
                     align-items: center;
 
+
                     .name {
                         margin-right: 15px;
                         font-size:.16rem;
                         color: #1f2329;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
                         .alias {
                             margin-left:.1rem;
                             font-size: .12rem

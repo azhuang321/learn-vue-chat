@@ -7,6 +7,7 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Inspect from 'vite-plugin-inspect';
+import { createStyleImportPlugin } from 'vite-plugin-style-import';
 
 const pathSrc = path.resolve(__dirname, 'src');
 
@@ -57,7 +58,7 @@ export default defineConfig({
                 }),
                 // Auto register Element Plus components
                 // 自动导入 Element Plus 组件
-                ElementPlusResolver({ importStyle: 'sass' })
+                ElementPlusResolver({ importStyle: 'sass', useSource: true })
             ],
 
             dts: path.resolve(pathSrc, 'components.d.ts')
@@ -65,6 +66,19 @@ export default defineConfig({
 
         Icons({
             autoInstall: true
+        }),
+        createStyleImportPlugin({
+            libs: [
+                {
+                    libraryName: 'element-plus',
+                    esModule: true,
+                    ensureStyleFile: true,
+                    resolveStyle: (name) => {
+                        console.log(name);
+                        return `element-plus/theme-chalk/src/${name}.scss`;
+                    }
+                }
+            ]
         }),
 
         Inspect()

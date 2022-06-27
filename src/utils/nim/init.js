@@ -1,5 +1,5 @@
 import config from '@/config/config';
-import { onConnect, onError, onWillReconnect, onDisConnect } from './connection';
+import { onConnect, onError, onWillReconnect, onDisConnect } from './callback';
 import { onMyInfo } from '@/utils/nim/user';
 
 await import(`../../nim_sdk/${config.sdk}.js`);

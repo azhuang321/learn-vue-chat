@@ -9,6 +9,9 @@ import '@/style/index.scss';
 
 import '@/assets/css/global.scss';
 
+// import ElementPlus from 'element-plus';
+// import 'element-plus/dist/index.css';
+
 import registerDirectives from './core/directives';// 自定义指令
 
 // import './core/global-component'; // 全局插件
@@ -19,6 +22,7 @@ const app = createApp(App);
 registerDirectives(app);
 
 app.use(myPlugin);
+// app.use(ElementPlus);
 
 
 app.use(router)

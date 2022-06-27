@@ -1,8 +1,8 @@
-import { CONNECT_NIM } from './constants';
+import * as c from './constants';
 
 export const actions = {
-    // 退出登录处理操作
-    [CONNECT_NIM] ({ commit }) {
-        commit(CONNECT_NIM);
+    // 连接状态
+    [c.CONNECT_STATUS] ({ commit }) {
+        commit(c.CONNECT_STATUS);
     }
 };

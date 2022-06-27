@@ -58,15 +58,11 @@
 
         <!-- 聊天面板容器 -->
         <el-main class="no-padding ov-hidden">
-<!--            异步 promise-->
-<!--          <suspense>
-
-          </suspense>-->
-
-            <router-view v-slot="{ Component }">
+            <router-view v-slot="{ Component,route }">
                 <keep-alive>
-                    <component :is="Component" />
+                    <component :is="Component" :key="route.name" v-if="route.meta.keepAlive"/>
                 </keep-alive>
+                <component :is="Component" v-if="!route.meta.keepAlive" />
             </router-view>
 
 

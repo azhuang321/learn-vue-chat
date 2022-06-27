@@ -39,6 +39,7 @@
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "@vue/eslint-config-standard": "^6.1.0",
+    "consola": "^2.15.3",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
@@ -50,6 +51,8 @@
     "unplugin-icons": "^0.14.3",
     "unplugin-vue-components": "^0.19.6",
     "vite": "^3.0.0-alpha.11",
-    "vite-plugin-inspect": "^0.5.0"
+    "vite-plugin-components": "^0.13.3",
+    "vite-plugin-inspect": "^0.5.0",
+    "vite-plugin-style-import": "^2.0.0"
   }
 }

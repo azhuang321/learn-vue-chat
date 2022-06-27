@@ -69,7 +69,7 @@ import { setToken } from '@/utils/auth';
 import { ServeLogin } from '@/api/auth';
 
 import { getNimInstance } from '@/utils/nim/init';
-import { isConnect } from '@/utils/nim/connection';
+import { isConnect } from '@/utils/nim/callback';
 import { useStore } from 'vuex';
 
 let router = null;

@@ -8,7 +8,9 @@ export default {
             path: '/contacts/apply',
             meta: {
                 title: '我的联系人',
-                needLogin: true
+                needLogin: true,
+                keepAlive: true
+
             },
             component: () => import('@/views/contacts/apply.vue')
         },
@@ -16,7 +18,8 @@ export default {
             path: '/contacts/friends',
             meta: {
                 title: '我的好友',
-                needLogin: true
+                needLogin: true,
+                keepAlive: true
             },
             component: () => import('@/views/contacts/friends.vue')
         },
@@ -24,7 +27,9 @@ export default {
             path: '/contacts/groups',
             meta: {
                 title: '我的群组',
-                needLogin: true
+                needLogin: true,
+                keepAlive: true
+
             },
             component: () => import('@/views/contacts/groups.vue')
         }

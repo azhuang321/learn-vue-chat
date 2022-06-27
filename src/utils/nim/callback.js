@@ -27,7 +27,7 @@ export const onDisConnect = (error) => {
             iOS: '手机版',
             WindowsPhone: '手机版'
         };
-        // let str = error.from;
+            // let str = error.from;
         const errorMsg = '你的帐号于 \'其他端\'踢出下线，请确定帐号信息安全!';
         alert(errorMsg);
         break;

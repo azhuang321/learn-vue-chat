@@ -123,6 +123,8 @@ import { getUser, updateFriend } from '@/utils/nim/user';
 import defaultAvatar from '@/assets/image/detault-avatar.jpg';
 import { Promotion } from '@element-plus/icons-vue';
 
+import { ElNotification } from 'element-plus';
+
 const useUserCardShowEffect = () => {
     const { props } = getCurrentInstance();
     const accountInfo = props.account_info;
@@ -172,6 +174,14 @@ const useUserRemarkEffect = () => {
             remarkData.text = obj.alias;
             accountInfo.alias = obj.alias;
             detail.alias = obj.alias;
+            console.log(obj);
+        }).catch((err) => {
+            ElNotification({
+                type: 'error',
+                message: '更新用户信息失败'
+            });
+            remarkData.text = detail.alias;
+        }).finally(() => {
             saveRemarkLoading.value = false;
             remarkData.isShow = false;
         });
@@ -197,8 +207,6 @@ export default {
     },
     data () {
         return {
-
-
             // 好友申请表单
             apply: {
                 isShow: false,
@@ -209,8 +217,6 @@ export default {
         };
     },
     methods: {
-
-
         // 发送添加好友申请
         sendApply () {
             if (this.apply.text == '') return;
@@ -227,7 +233,6 @@ export default {
                 }
             });
         },
-
 
         // 隐藏申请表单
         closeApply () {

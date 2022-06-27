@@ -1,3 +1,5 @@
+import * as c from './constants';
+
 export const state = () => ({
-    nimInstance: null // nim 实例
+    connectStatus: c.CONNECT_STATUS_ARR.disconnect
 });

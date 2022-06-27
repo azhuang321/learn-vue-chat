@@ -5,8 +5,12 @@
 
 </template>
 <script>
-import { isConnect } from '@/utils/nim/connection';
+import { isConnect } from '@/utils/nim/callback';
 import { getNimInstance } from '@/utils/nim/init';
+import { useStore } from 'vuex';
+// import 'element-plus/theme-chalk/src/loading.scss';
+
+import { CONNECT_STATUS, CONNECT_STATUS_ARR } from '@/store/modules/nim/constants';
 
 export default {
     name: 'App',
@@ -27,18 +31,26 @@ export default {
         }
     }
 };
+
 </script>
 <script setup>
+const store = useStore();
 
+const connectStatus = computed(() => store.getters.connectStatus);
 
-// const loadingInstance = ElLoading.service({ fullscreen: true, target: 'html' });
-// getNimInstance();
-//
-// watch(isConnect, (isConnect) => {
-//     console.dir(isConnect);
-//     // if (isConnect === true) {
-//     //     loadingInstance.close();
-//     // }
-// });
+watch(connectStatus, (status) => {
+    console.log(status);
+});
+
+setTimeout(() => {
+    store.commit(CONNECT_STATUS, CONNECT_STATUS_ARR.connected);
+}, 2000);
+
+const loadingInstance = ElLoading.service({ fullscreen: true, target: 'html' });
+
+setTimeout(() => {
+    loadingInstance.close();
+}, 2000);
+
 
 </script>
