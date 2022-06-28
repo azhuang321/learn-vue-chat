@@ -171,12 +171,6 @@ const { defaultAvatar, friendsListStatue, friendsList, getFriendsListFunc } = us
 const { showCardFunc } = useShowUserInfoEffect();
 onActivated(getFriendsListFunc);
 
-setTimeout(() => {
-    ElNotification({
-        type: 'error',
-        message: '获取好友列表失败'
-    });
-},2000)
 </script>
 <style lang="scss" scoped>
 .aside-box {

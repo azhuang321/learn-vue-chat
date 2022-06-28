@@ -5,14 +5,19 @@ export const onConnect = (event) => {
 };
 
 export const onError = (event) => {
-    console.dir('onError');
+    isConnect.value = false;
+    console.log('onError', event);
 };
 
 export const onWillReconnect = (event) => {
-    console.dir('onWillReconnect');
+    isConnect.value = false;
+    console.log('onWillReconnect', event);
 };
 
 export const onDisConnect = (error) => {
+    isConnect.value = false;
+
+    console.log('onDisConnect', error);
     switch (error.code) {
     // 账号或者密码错误, 请跳转到登录页面并提示错误
     case 302: {

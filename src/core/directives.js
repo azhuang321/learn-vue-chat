@@ -1,4 +1,4 @@
-import ClickOutside from 'element-plus/lib/directives/click-outside/index';
+import { ClickOutside } from 'element-plus';
 
 const directives = {
     // 自定义聚焦指令

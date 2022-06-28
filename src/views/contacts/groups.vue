@@ -97,10 +97,10 @@
 </template>
 
 <script>
-import GroupPanel from '@/components/group/GroupPanel';
+import GroupPanel from '@/components/group/GroupPanel.vue';
 import { ServeGetGroups, ServeSecedeGroup } from '@/api/group';
-import Empty from '@/components/global/Empty';
-import Loading from '@/components/global/Loading';
+import Empty from '@/components/global/Empty.vue';
+import Loading from '@/components/global/Loading.vue';
 import { toTalk } from '@/utils/talk';
 
 export default {

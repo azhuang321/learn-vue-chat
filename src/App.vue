@@ -5,12 +5,19 @@
 
 </template>
 <script>
-import { isConnect } from '@/utils/nim/callback';
-import { getNimInstance } from '@/utils/nim/init';
-import { useStore } from 'vuex';
-// import 'element-plus/theme-chalk/src/loading.scss';
+// import dayjs from 'dayjs';
+// import 'dayjs/plugin/advancedFormat.js';
+// import 'dayjs/plugin/customParseFormat.js';
+// import 'dayjs/plugin/duration';
+// import 'dayjs/plugin/arraySupport';
+// import 'dayjs/plugin/localeData.js';
+// import 'dayjs/plugin/weekOfYear.js';
+// import 'dayjs/plugin/isSameOrBefore.js';
+// import 'dayjs/plugin/isSameOrAfter.js';
+// import 'dayjs/plugin/dayOfYear.js';
+// import 'dayjs/plugin/weekYear.js';
+// import '';
 
-import { CONNECT_STATUS, CONNECT_STATUS_ARR } from '@/store/modules/nim/constants';
 
 export default {
     name: 'App',
@@ -34,23 +41,4 @@ export default {
 
 </script>
 <script setup>
-const store = useStore();
-
-const connectStatus = computed(() => store.getters.connectStatus);
-
-watch(connectStatus, (status) => {
-    console.log(status);
-});
-
-setTimeout(() => {
-    store.commit(CONNECT_STATUS, CONNECT_STATUS_ARR.connected);
-}, 2000);
-
-const loadingInstance = ElLoading.service({ fullscreen: true, target: 'html' });
-
-setTimeout(() => {
-    loadingInstance.close();
-}, 2000);
-
-
 </script>

@@ -9,6 +9,10 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Inspect from 'vite-plugin-inspect';
 import { createStyleImportPlugin } from 'vite-plugin-style-import';
 
+
+// import { dayjs } from 'element-plus';
+// import dayjs from 'dayjs/dayjs.min';
+
 const pathSrc = path.resolve(__dirname, 'src');
 
 export default defineConfig({
@@ -74,13 +78,40 @@ export default defineConfig({
                     esModule: true,
                     ensureStyleFile: true,
                     resolveStyle: (name) => {
-                        console.log(name);
-                        return `element-plus/theme-chalk/src/${name}.scss`;
+                        return `element-plus/theme-chalk/${name}.css`;
                     }
                 }
             ]
         }),
 
         Inspect()
-    ]
+    ],
+    optimizeDeps: {
+        include: ['dayjs']
+    },
+    build: {
+        rollupOptions: {
+            external: [
+                'element-plus'
+            ]
+        },
+        commonjsOptions: {
+            include: [/node_modules/],
+            dynamicRequireTargets: [
+                // include using a glob pattern (either a string or an array of strings)
+                'node_modules/dayjs/dayjs.min.js',
+
+                // exclude files that are known to not be required dynamically, this allows for better optimizations
+                '!node_modules/dayjs/dayjs.min.js'
+            ],
+            // exclude: ['node_modules/dayjs/dayjs.min.js']
+            exclude: [
+                /dayjs/,
+                /dayjs.min.js/,
+                /customParseFormat.js/
+            ]
+        }
+
+
+    }
 });

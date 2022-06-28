@@ -19,7 +19,7 @@
                         </el-popover>
 
                         <p class="user-status">
-                            <span v-if="socketStatus" class="online">在线</span>
+                            <span v-if="socketStatus === CONNECT_STATUS_ENUM.connected" class="online">在线</span>
                             <span v-else>连接中...</span>
                         </p>
                     </el-header>
@@ -82,11 +82,21 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, useStore } from 'vuex';
 import AccountCard from '@/components/user/AccountCard.vue';
 // import RewardModule from '@/components/layout/RewardModule.vue';
 // import AbsModule from '@/components/layout/AbsModule.vue';
 import { ServeFindFriendApplyNum } from '@/api/contacts';
+import { CONNECT_STATUS, CONNECT_STATUS_ENUM } from '@/store/modules/nim/constants';
+import { isConnect } from '@/utils/nim/callback';
+
+import 'element-plus/theme-chalk/el-loading.css';
+
+const useInitEffect = () => {
+    return {
+        CONNECT_STATUS_ENUM
+    };
+};
 
 export default {
     name: 'MainLayout',
@@ -105,7 +115,6 @@ export default {
         ...mapState({
             userAvatar: state => state.user.avatar,
             detaultAvatar: state => state.detaultAvatar,
-            socketStatus: state => state.socketStatus,
             applyNum: state => state.notify.applyNum,
             notifyCueTone: state => state.settings.notifyCueTone,
             themeMode: state => state.settings.themeMode,
@@ -144,11 +153,41 @@ export default {
 <script setup>
 const usercard = ref(null);
 
+const { CONNECT_STATUS_ENUM } = useInitEffect();
+
+const store = useStore();
+
+const socketStatus = computed(() => store.getters.connectStatus);
+
+let notification = null;
+const notifyFunc = () => {
+    return ElNotification.error({
+        message: '断开连接，正在尝试重新连接',
+        duration: 0,
+        showClose: false
+    });
+};
+notification = notifyFunc();
+
+watch(isConnect, (value) => {
+    if (value === true) {
+        if (notification) notification.close();
+        store.commit(CONNECT_STATUS, CONNECT_STATUS_ENUM.connected);
+    } else {
+        notification = notifyFunc();
+        store.commit(CONNECT_STATUS, CONNECT_STATUS_ENUM.disconnect);
+    }
+});
+
+
+setTimeout(() => {
+    test.close();
+}, 3000);
 
 </script>
 <style lang="scss" scoped>
 // todo 优化 css
-.el-main{
+.el-main {
     padding: 0;
 }
 
