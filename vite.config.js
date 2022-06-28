@@ -8,6 +8,7 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Inspect from 'vite-plugin-inspect';
 import { createStyleImportPlugin } from 'vite-plugin-style-import';
+import importToCDN, { autoComplete } from 'vite-plugin-cdn-import';
 
 
 // import { dayjs } from 'element-plus';
@@ -30,12 +31,23 @@ export default defineConfig({
     },
     plugins: [
         Vue(),
+        importToCDN({
+            modules: [
+                autoComplete('lodash'),
+                {
+                    name: 'element-plus',
+                    var: 'ElementPlus',
+                    path: 'https://cdn.jsdelivr.net/npm/element-plus@2.1.9'
+                }
+            ]
+        }),
         AutoImport({
             // Auto import functions from Vue, e.g. ref, reactive, toRef...
             // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
             imports: ['vue', 'vue-router'],
             exclude: [
-                /NIM_Web_NIM_v9.2.0.js/
+                /NIM_Web_NIM_v9.2.0.js/,
+                /dayjs.min.js/
             ],
 
             // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
@@ -90,6 +102,7 @@ export default defineConfig({
         include: ['dayjs']
     },
     build: {
+        target: ['chrome90'],
         rollupOptions: {
             external: [
                 'element-plus'
